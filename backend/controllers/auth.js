@@ -9,7 +9,6 @@ const createAccount = async (req, res, next) => {
     const userExist = await userModel.find({ username: req.body.username });
     const emailExist = await userModel.find({ email: req.body.email });
     if (userExist.toString() !== "") {
-      console.log(`My username: B${userExist}B`);
       return res.status(400).send({ message: "Username is taken" });
     }
     if (emailExist.toString() !== "") {
@@ -34,7 +33,7 @@ const login = async (req, res, next) => {
       return res.status(400).json({ result: "User with that email not found" });
     }
     const result = bcrypt.compareSync(req.body.password, user.password);
-    console.log(result);
+
     if (result === null) {
       return res.status(400).json({ outcome: "An error occured" });
     }
