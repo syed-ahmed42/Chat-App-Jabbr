@@ -1,13 +1,12 @@
 import React from "react";
+import CreateAccountPage from "../../../component/createAccountPage";
+import RedirectFromLogin from "../../../utils/redirectFromLogin";
 
 const createAccount = () => {
   return (
-    <div className="bg-cyan-50 h-full w-full">
-      <input type="text" />
-      <input type="text" />
-      <input type="text" />
-      <button>Register</button>
-    </div>
+    <RedirectFromLogin>
+      <CreateAccountPage />
+    </RedirectFromLogin>
   );
 };
 

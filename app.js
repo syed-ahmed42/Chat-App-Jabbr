@@ -1,4 +1,5 @@
 const express = require("express");
+const sessions = require("express-session");
 const app = express();
 const port = 3000;
 const auth = require("./backend/routes/auth");
@@ -8,8 +9,23 @@ const http = require("http");
 const cors = require("cors");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const cookieParser = require("cookie-parser");
 
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({ credentials: true, origin: "http://localhost:8080" }));
+
+// creating 24 hours from milliseconds
+const oneDay = 1000 * 60 * 60 * 24;
+
+//session middleware
+app.use(
+  sessions({
+    secret: "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+    saveUninitialized: true,
+    cookie: { maxAge: oneDay },
+    resave: false,
+  })
+);
 
 const ioServer = new Server(server, {
   cors: "http://localhost:8080",
@@ -27,6 +43,9 @@ const start = async () => {
     mongoose.connect(process.env.MONGO_URI);
     ioServer.on("connection", (socket) => {
       console.log("a user connected");
+      socket.on("chat message", (msg) => {
+        console.log(msg);
+      });
     });
     server.listen(port, () => {
       console.log(`Example app listening on port ${port}`);

@@ -1,5 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const asyncWrapper = require("../middlewares/asyncWrapper");
+const oneDay = 1000 * 60 * 60 * 24;
 const userModel = require("../models/user");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -40,13 +41,34 @@ const login = async (req, res, next) => {
     if (result === false) {
       return res.status(400).json({ outcome: "Incorrect password" });
     }
+    req.session.userId = user.id;
+
+    if (req.cookies.doesCookieExist === undefined) {
+      res.cookie("doesCookieExist", true, {
+        httpOnly: false,
+        //Set cookie expiry to httpOnly cookie expiry time
+        expires: req.session.cookie._expires,
+        secure: true,
+        sameSite: "none",
+      });
+    }
+
     return res.status(200).json({ type: "Successfully logged in" });
   } catch (error) {
     console.log(error);
   }
 };
 
+const checkSessionValidity = async (req, res, next) => {
+  if (req.session.userId) {
+    return res.status(200).json({ outcome: "session found" });
+  } else {
+    return res.status(400).json({ outcome: "session not found" });
+  }
+};
+
 module.exports = {
   createAccount,
   login,
+  checkSessionValidity,
 };
