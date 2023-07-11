@@ -1,7 +1,9 @@
 const { default: mongoose } = require("mongoose");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const oneDay = 1000 * 60 * 60 * 24;
+require("dotenv").config();
 const userModel = require("../models/user");
+const db = mongoose.createConnection(process.env.MONGO_URI);
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -43,13 +45,14 @@ const login = async (req, res, next) => {
     }
     req.session.userId = user.id;
 
-    if (req.cookies.doesCookieExist === undefined) {
-      res.cookie("doesCookieExist", true, {
+    console.log(req.session.cookie.originalMaxAge);
+
+    if (req.cookies.sid === undefined || req.cookies.sid !== req.sessionID) {
+      res.cookie("sid", req.sessionID, {
         httpOnly: false,
         //Set cookie expiry to httpOnly cookie expiry time
         expires: req.session.cookie._expires,
-        secure: true,
-        sameSite: "none",
+        secure: false,
       });
     }
 
@@ -67,8 +70,18 @@ const checkSessionValidity = async (req, res, next) => {
   }
 };
 
+const logout = async (req, res, next) => {
+  console.log(req.sessionID);
+  req.session.destroy(async (err) => {
+    console.log("Error has occured on logout");
+  });
+
+  return res.status(200).json({ outcome: "success" });
+};
+
 module.exports = {
   createAccount,
   login,
   checkSessionValidity,
+  logout,
 };
