@@ -10,13 +10,23 @@ import { useRouter } from "next/navigation";
 import { MongoClient } from "mongodb";
 
 const ChatPage = () => {
-  const isLoggedIn = true;
+  const [gamer, setGamer] = useState([]);
+  const batman = async () => {
+    const { data } = await axios.get(
+      "http://localhost:3000/api/v1/chat/getChatMessages"
+    );
+    console.log(data);
+    //console.log()
+    const json = await data;
+    setGamer(json.message);
+  };
+  useEffect(() => {
+    batman();
+  }, []);
+  console.log("This is data: " + gamer);
   const [message, setMessage] = useState("");
   const router = useRouter();
 
-  if (!isLoggedIn) {
-    redirect("/login");
-  }
   //Using useEffect so that io only gets called once
 
   function sendMessage(msg: string) {
@@ -43,7 +53,11 @@ const ChatPage = () => {
       <button onClick={() => handleLogOut()} className="bg-orange-400">
         Log out
       </button>
-      <div className="h-full w-full bg-cyan-500">Place to chat</div>
+      <div className="h-full w-full bg-cyan-500">
+        {gamer.map((g, i) => (
+          <p key={i}>{g}</p>
+        ))}
+      </div>
       <input
         type="text"
         placeholder="Type something..."

@@ -4,6 +4,7 @@ const sessions = require("express-session");
 const app = express();
 const port = 3000;
 const auth = require("./backend/routes/auth");
+const chat = require("./backend/routes/chat");
 require("dotenv").config("__dirname/.env");
 const mongoose = require("mongoose");
 const http = require("http");
@@ -45,6 +46,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/auth", auth);
+app.use("/api/v1/chat", chat);
 
 const start = async () => {
   try {

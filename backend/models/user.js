@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
+const chatModel = require("./chat");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -18,6 +20,9 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Must provide password"],
+  },
+  listOfChats: {
+    type: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
   },
 });
 
