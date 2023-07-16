@@ -8,22 +8,25 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { MongoClient } from "mongodb";
+import Contacts from "./contacts";
 
 const ChatPage = () => {
-  const [gamer, setGamer] = useState([]);
-  const batman = async () => {
-    const { data } = await axios.get(
-      "http://localhost:3000/api/v1/chat/getChatMessages"
-    );
-    console.log(data);
-    //console.log()
-    const json = await data;
-    setGamer(json.message);
+  const [contactData, setContactData] = useState();
+
+  const getContacts = async () => {
+    //This line sends cookies to the server
+    axios.defaults.withCredentials = true;
+    const res = await axios.get("http://localhost:3000/api/v1/chat/getChats");
+
+    setContactData(res.data);
   };
   useEffect(() => {
-    batman();
+    getContacts();
   }, []);
-  console.log("This is data: " + gamer);
+  if (contactData !== undefined) {
+    console.log("This is contact data: " + contactData.username);
+  }
+
   const [message, setMessage] = useState("");
   const router = useRouter();
 
@@ -53,11 +56,8 @@ const ChatPage = () => {
       <button onClick={() => handleLogOut()} className="bg-orange-400">
         Log out
       </button>
-      <div className="h-full w-full bg-cyan-500">
-        {gamer.map((g, i) => (
-          <p key={i}>{g}</p>
-        ))}
-      </div>
+      <div>{contactData !== undefined && <Contacts data={contactData} />}</div>
+      <div className="h-full w-full bg-cyan-500"></div>
       <input
         type="text"
         placeholder="Type something..."

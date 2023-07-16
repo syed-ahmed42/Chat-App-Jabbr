@@ -9,7 +9,12 @@ const messageSchema = new mongoose.Schema({
   },
   timestamp: {
     type: Date,
-    required: [true, "Must provide message content"],
+    required: [true, "Must provide timestamp"],
+  },
+  sender: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: [true, "GG"],
   },
 });
 
