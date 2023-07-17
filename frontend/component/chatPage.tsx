@@ -9,22 +9,24 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { MongoClient } from "mongodb";
 import Contacts from "./contacts";
+import ChatViewport from "./chatViewport";
 
 const ChatPage = () => {
-  const [contactData, setContactData] = useState();
-
+  const [chatData, setChatData] = useState();
+  const [messages, setMessages] = useState([""]);
   const getContacts = async () => {
     //This line sends cookies to the server
     axios.defaults.withCredentials = true;
     const res = await axios.get("http://localhost:3000/api/v1/chat/getChats");
 
-    setContactData(res.data);
+    setChatData(res.data);
   };
+
   useEffect(() => {
     getContacts();
   }, []);
-  if (contactData !== undefined) {
-    console.log("This is contact data: " + contactData.username);
+  if (chatData !== undefined) {
+    console.log("This is contact data: " + chatData.username);
   }
 
   const [message, setMessage] = useState("");
@@ -35,6 +37,25 @@ const ChatPage = () => {
   function sendMessage(msg: string) {
     socket.emit("chat message", msg);
   }
+
+  const fetchMessages = (username: string) => {
+    console.log("Fetching messages..." + username.contact);
+    for (let i = 0; i < chatData?.listOfChats.length; i++) {
+      if (
+        chatData?.listOfChats[i].members.find(
+          (e) => e.username === username.contact
+        ) !== undefined
+      ) {
+        console.log(
+          "This is the chat that should be fetched: " +
+            JSON.stringify(chatData?.listOfChats[i].listOfMessages)
+        );
+        setMessages([JSON.stringify(chatData?.listOfChats[i].listOfMessages)]);
+        break;
+      }
+    }
+    console.log(messages);
+  };
 
   const handleLogOut = async () => {
     axios.defaults.withCredentials = true;
@@ -56,8 +77,14 @@ const ChatPage = () => {
       <button onClick={() => handleLogOut()} className="bg-orange-400">
         Log out
       </button>
-      <div>{contactData !== undefined && <Contacts data={contactData} />}</div>
-      <div className="h-full w-full bg-cyan-500"></div>
+      <div>
+        {chatData !== undefined && (
+          <Contacts data={chatData} handleClick={fetchMessages} />
+        )}
+      </div>
+      <div className="h-full w-full bg-cyan-500">
+        <ChatViewport messages={messages} />
+      </div>
       <input
         type="text"
         placeholder="Type something..."

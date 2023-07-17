@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const Contacts = ({ data }: any) => {
+const Contacts = ({ data, handleClick }: any) => {
   const [contacts, setContacts] = useState([""]);
   const curUser = data.username;
   //console.log(
@@ -30,7 +30,9 @@ const Contacts = ({ data }: any) => {
   return (
     <>
       {contacts.map((contact) => (
-        <ul key={contact}>{contact}</ul>
+        <button key={contact} onClick={() => handleClick({ contact })}>
+          {contact}
+        </button>
       ))}
     </>
   );
