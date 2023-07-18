@@ -12,8 +12,9 @@ import Contacts from "./contacts";
 import ChatViewport from "./chatViewport";
 
 const ChatPage = () => {
-  const [chatData, setChatData] = useState();
+  const [chatData, setChatData]: any = useState();
   const [messages, setMessages] = useState([""]);
+  const [curChatID, setCurChatID] = useState("");
   const getContacts = async () => {
     //This line sends cookies to the server
     axios.defaults.withCredentials = true;
@@ -29,28 +30,27 @@ const ChatPage = () => {
     console.log("This is contact data: " + chatData.username);
   }
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState([""]);
   const router = useRouter();
 
   //Using useEffect so that io only gets called once
 
-  function sendMessage(msg: string) {
-    socket.emit("chat message", msg);
-  }
-
-  const fetchMessages = (username: string) => {
+  const fetchMessages = (username: any) => {
     console.log("Fetching messages..." + username.contact);
     for (let i = 0; i < chatData?.listOfChats.length; i++) {
       if (
         chatData?.listOfChats[i].members.find(
-          (e) => e.username === username.contact
+          (e: any) => e.username === username.contact
         ) !== undefined
       ) {
+        const listOfMsgArr = chatData?.listOfChats[i].listOfMessages;
+
+        const msgContent = listOfMsgArr.map((msg: any) => msg.content);
         console.log(
           "This is the chat that should be fetched: " +
-            JSON.stringify(chatData?.listOfChats[i].listOfMessages)
+            JSON.stringify(msgContent)
         );
-        setMessages([JSON.stringify(chatData?.listOfChats[i].listOfMessages)]);
+        setMessages([JSON.stringify(msgContent)]);
         break;
       }
     }
@@ -71,6 +71,11 @@ const ChatPage = () => {
     router.replace("/login");
   };
 
+  const sendMessage = (chatID: any, msg: any) => {
+    setMessages((prevMsgs) => [...prevMsgs, msg]);
+    socket.emit("create room", chatData?.chatID);
+  };
+
   return (
     <div className="h-full w-full">
       <input type="text" placeholder="Search" />
@@ -88,9 +93,11 @@ const ChatPage = () => {
       <input
         type="text"
         placeholder="Type something..."
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={(e) =>
+          setMessage((prevMsgs) => [...prevMsgs, e.target.value])
+        }
       />
-      <button onClick={() => sendMessage(message)}>Click Me</button>
+      <button onClick={() => sendMessage(message[0])}>Click Me</button>
     </div>
   );
 };

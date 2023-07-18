@@ -38,7 +38,7 @@ app.use(
 const ioServer = new Server(server, {
   cors: "http://localhost:8080",
 });
-
+module.exports = { ioServer };
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -53,8 +53,8 @@ const start = async () => {
     mongoose.connect(process.env.MONGO_URI);
     ioServer.on("connection", (socket) => {
       console.log("a user connected");
-      socket.on("chat message", (msg) => {
-        console.log(msg);
+      socket.on("create room", (chatID) => {
+        console.log(chatID);
       });
     });
     server.listen(port, () => {

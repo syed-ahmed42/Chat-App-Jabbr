@@ -21,7 +21,7 @@ const getChats = async (req, res, next) => {
     .findById(userID, { username: 1, _id: 0 })
     .populate({
       path: "listOfChats",
-      select: { _id: 0 },
+      select: { _id: 1 },
       populate: [
         {
           path: "listOfMessages",
@@ -56,6 +56,7 @@ const createMessage = async (req, res, next) => {
     },
     { new: true }
   );
+
   res.status(200).json({ outcome: "Message successfully created" });
 };
 
