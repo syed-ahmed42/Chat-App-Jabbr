@@ -11,11 +11,13 @@ import { MongoClient } from "mongodb";
 import Contacts from "./contacts";
 import ChatViewport from "./chatViewport";
 import ChatInput from "./chatInput";
+let curChatID: any = "";
 
 const ChatPage = () => {
   const [chatData, setChatData]: any = useState();
   const [messages, setMessages] = useState([""]);
-  const [curChatID, setCurChatID]: any = useState("");
+
+  const [curChatStateID, setCurChatStateID] = useState("");
   const getContacts = async () => {
     //This line sends cookies to the server
     axios.defaults.withCredentials = true;
@@ -31,7 +33,8 @@ const ChatPage = () => {
   useEffect(() => {
     socket.on("receive message", (msg) => {
       console.log(
-        "Message received. This is the chatID of receiver: " + curChatID
+        "Message received. The current client is currently viewing chat with chatID: " +
+          curChatID
       );
       /*if (curChatID !== "") {
         console.log(msg + " Sent to chat id: " + curChatID);
@@ -40,8 +43,9 @@ const ChatPage = () => {
   }, [socket]);
 
   useEffect(() => {
-    socket.emit("join room", curChatID);
-  }, [curChatID]);
+    console.log("CLIENT SIDE: Joining room with ID: " + curChatID);
+    socket.emit("join room", curChatStateID);
+  }, [curChatStateID]);
   if (chatData !== undefined) {
     console.log("This is contact data: " + chatData.username);
   }
@@ -79,7 +83,9 @@ const ChatPage = () => {
         )
       ) {
         const listOfMsgArr = chatData?.listOfChats[i].listOfMessages;
-        setCurChatID(chatData?.listOfChats[i]._id);
+        curChatID = chatData?.listOfChats[i]._id;
+        console.log("Changing cur chat id: " + curChatID);
+        setCurChatStateID(curChatID);
         console.log("ChatID: " + curChatID);
 
         const msgContent = listOfMsgArr.map((msg: any) => msg.content);
@@ -109,6 +115,9 @@ const ChatPage = () => {
   };
 
   const sendMessage = (chatID: any, msg: any) => {
+    if (chatID === "") {
+      console.log("ERROR: ChatID is empty string");
+    }
     if (chatID !== "") {
       setMessages((prevArr) => [...prevArr, "Donkey"]);
       console.log("These are the updated messages after sending: " + messages);
@@ -128,9 +137,9 @@ const ChatPage = () => {
         )}
       </div>
       <div className="h-full w-full bg-cyan-500">
-        <ChatViewport messages={messages} curChatID={curChatID} />
+        <ChatViewport messages={messages} />
       </div>
-      <ChatInput curChatID={curChatID} pepsiClick={sendMessage} />
+      <ChatInput pepsiClick={sendMessage} curChatID={curChatID} />
     </div>
   );
 };
