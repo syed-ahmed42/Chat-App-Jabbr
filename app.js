@@ -53,8 +53,19 @@ const start = async () => {
     mongoose.connect(process.env.MONGO_URI);
     ioServer.on("connection", (socket) => {
       console.log("a user connected");
-      socket.on("create room", (chatID) => {
-        console.log(chatID);
+      socket.on("join room", (chatID) => {
+        console.log("Joined room with ID: " + chatID);
+        socket.join(chatID);
+      });
+
+      socket.on("leave room", (chatID) => {
+        console.log("Left room with ID: " + chatID);
+        socket.leave(chatID);
+      });
+
+      socket.on("send message", (chatID, msg) => {
+        console.log("Sent message: " + msg + " to room: " + chatID);
+        ioServer.to(chatID).emit("receive message", "Donkey");
       });
     });
     server.listen(port, () => {

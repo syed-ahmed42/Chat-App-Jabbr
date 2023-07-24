@@ -10,11 +10,12 @@ import { useRouter } from "next/navigation";
 import { MongoClient } from "mongodb";
 import Contacts from "./contacts";
 import ChatViewport from "./chatViewport";
+import ChatInput from "./chatInput";
 
 const ChatPage = () => {
   const [chatData, setChatData]: any = useState();
   const [messages, setMessages] = useState([""]);
-  const [curChatID, setCurChatID] = useState("");
+  const [curChatID, setCurChatID]: any = useState("");
   const getContacts = async () => {
     //This line sends cookies to the server
     axios.defaults.withCredentials = true;
@@ -26,31 +27,67 @@ const ChatPage = () => {
   useEffect(() => {
     getContacts();
   }, []);
+
+  useEffect(() => {
+    socket.on("receive message", (msg) => {
+      console.log(
+        "Message received. This is the chatID of receiver: " + curChatID
+      );
+      /*if (curChatID !== "") {
+        console.log(msg + " Sent to chat id: " + curChatID);
+      }*/
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    socket.emit("join room", curChatID);
+  }, [curChatID]);
   if (chatData !== undefined) {
     console.log("This is contact data: " + chatData.username);
   }
+
+  useEffect(() => {
+    socket.on("connection", () => {
+      console.log("Connected on the client side");
+    });
+  }, []);
 
   const [message, setMessage] = useState([""]);
   const router = useRouter();
 
   //Using useEffect so that io only gets called once
 
-  const fetchMessages = (username: any) => {
-    console.log("Fetching messages..." + username.contact);
+  const fetchMessages = async (username: any) => {
+    console.log("Fetching messages..." + JSON.stringify(username));
+    /*console.log(
+      "Members data: " + JSON.stringify(chatData?.listOfChats[0].members)
+    );
+    console.log(
+      "Checking whether list of chats includes Jane: " +
+        chatData?.listOfChats[0].members.some(
+          (objField: any) => objField.username === "Jane"
+        )
+    );*/
+    //console.log("ChatID: " + chatData?.listOfChats[0]._id);
     for (let i = 0; i < chatData?.listOfChats.length; i++) {
       if (
-        chatData?.listOfChats[i].members.find(
-          (e: any) => e.username === username.contact
-        ) !== undefined
+        chatData?.listOfChats[i].members.some(
+          (objField: any) => objField.username === chatData.username
+        ) &&
+        chatData?.listOfChats[i].members.some(
+          (objField: any) => objField.username === username.contact
+        )
       ) {
         const listOfMsgArr = chatData?.listOfChats[i].listOfMessages;
+        setCurChatID(chatData?.listOfChats[i]._id);
+        console.log("ChatID: " + curChatID);
 
         const msgContent = listOfMsgArr.map((msg: any) => msg.content);
-        console.log(
+        /*console.log(
           "This is the chat that should be fetched: " +
             JSON.stringify(msgContent)
-        );
-        setMessages([JSON.stringify(msgContent)]);
+        );*/
+        setMessages(msgContent);
         break;
       }
     }
@@ -72,8 +109,11 @@ const ChatPage = () => {
   };
 
   const sendMessage = (chatID: any, msg: any) => {
-    setMessages((prevMsgs) => [...prevMsgs, msg]);
-    socket.emit("create room", chatData?.chatID);
+    if (chatID !== "") {
+      setMessages((prevArr) => [...prevArr, "Donkey"]);
+      console.log("These are the updated messages after sending: " + messages);
+      socket.emit("send message", chatID, "Donkey");
+    }
   };
 
   return (
@@ -88,16 +128,9 @@ const ChatPage = () => {
         )}
       </div>
       <div className="h-full w-full bg-cyan-500">
-        <ChatViewport messages={messages} />
+        <ChatViewport messages={messages} curChatID={curChatID} />
       </div>
-      <input
-        type="text"
-        placeholder="Type something..."
-        onChange={(e) =>
-          setMessage((prevMsgs) => [...prevMsgs, e.target.value])
-        }
-      />
-      <button onClick={() => sendMessage(message[0])}>Click Me</button>
+      <ChatInput curChatID={curChatID} pepsiClick={sendMessage} />
     </div>
   );
 };
