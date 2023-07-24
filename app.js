@@ -65,7 +65,12 @@ const start = async () => {
 
       socket.on("send message", (chatID, msg) => {
         console.log("Sent message: " + msg + " to room: " + chatID);
-        ioServer.to(chatID).emit("receive message", "Donkey");
+        ioServer
+          .to(chatID)
+          .emit(
+            "receive message",
+            JSON.stringify({ content: "Donkey", chatID: chatID })
+          );
       });
     });
     server.listen(port, () => {

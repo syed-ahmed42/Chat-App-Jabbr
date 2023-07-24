@@ -36,6 +36,16 @@ const ChatPage = () => {
         "Message received. The current client is currently viewing chat with chatID: " +
           curChatID
       );
+      const msgObject = JSON.parse(msg);
+      console.log("This is msgObject chatID: " + msgObject.chatID);
+      if (msgObject.chatID === curChatID) {
+        setMessages((prevArr) => [...prevArr, msg]);
+      }
+
+      console.log(
+        "This is the updated message state after receipt of message: " +
+          messages
+      );
       /*if (curChatID !== "") {
         console.log(msg + " Sent to chat id: " + curChatID);
       }*/
@@ -119,8 +129,6 @@ const ChatPage = () => {
       console.log("ERROR: ChatID is empty string");
     }
     if (chatID !== "") {
-      setMessages((prevArr) => [...prevArr, "Donkey"]);
-      console.log("These are the updated messages after sending: " + messages);
       socket.emit("send message", chatID, "Donkey");
     }
   };
