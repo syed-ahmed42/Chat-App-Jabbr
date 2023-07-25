@@ -12,6 +12,8 @@ import Contacts from "./contacts";
 import ChatViewport from "./chatViewport";
 import ChatInput from "./chatInput";
 let curChatID: any = "";
+let fastMessagesArr: any = [""];
+let fastChatData: any;
 
 const ChatPage = () => {
   const [chatData, setChatData]: any = useState();
@@ -24,11 +26,12 @@ const ChatPage = () => {
     const res = await axios.get("http://localhost:3000/api/v1/chat/getChats");
 
     setChatData(res.data);
+    fastChatData = res.data;
   };
 
   useEffect(() => {
     getContacts();
-  }, []);
+  }, [curChatStateID]);
 
   useEffect(() => {
     socket.on("receive message", (msg) => {
@@ -36,12 +39,15 @@ const ChatPage = () => {
         "Message received. The current client is currently viewing chat with chatID: " +
           curChatID
       );
+      //MsgObject has format
+      //{content: ..., chatID: ..., sender: ...}
       const msgObject = JSON.parse(msg);
       console.log("This is msgObject chatID: " + msgObject.chatID);
       if (msgObject.chatID === curChatID) {
-        setMessages((prevArr) => [...prevArr, msg]);
+        setMessages((prevArr) => [...prevArr, msgObject.content]);
+        fastMessagesArr.push(msgObject.content);
       }
-
+      getContacts();
       console.log(
         "This is the updated message state after receipt of message: " +
           messages
@@ -104,6 +110,8 @@ const ChatPage = () => {
             JSON.stringify(msgContent)
         );*/
         setMessages(msgContent);
+        fastMessagesArr = msgContent;
+        console.log("This is fastMessagesArr: " + fastMessagesArr);
         break;
       }
     }
@@ -121,6 +129,8 @@ const ChatPage = () => {
         console.log(err);
         console.log(err.response);
       });
+    setMessages([""]);
+    fastMessagesArr = [""];
     router.replace("/login");
   };
 
@@ -129,7 +139,7 @@ const ChatPage = () => {
       console.log("ERROR: ChatID is empty string");
     }
     if (chatID !== "") {
-      socket.emit("send message", chatID, "Donkey");
+      socket.emit("send message", chatID, msg, chatData.username);
     }
   };
 
@@ -145,7 +155,11 @@ const ChatPage = () => {
         )}
       </div>
       <div className="h-full w-full bg-cyan-500">
-        <ChatViewport messages={messages} />
+        <ChatViewport
+          messages={fastMessagesArr}
+          curChatID={curChatID}
+          chatData={fastChatData}
+        />
       </div>
       <ChatInput pepsiClick={sendMessage} curChatID={curChatID} />
     </div>

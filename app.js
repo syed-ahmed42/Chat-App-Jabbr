@@ -13,6 +13,7 @@ const cors = require("cors");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const cookieParser = require("cookie-parser");
+const { addMessageToCurrentChat } = require("./backend/utils/helper");
 
 app.use(
   cookieParser(
@@ -63,13 +64,14 @@ const start = async () => {
         socket.leave(chatID);
       });
 
-      socket.on("send message", (chatID, msg) => {
+      socket.on("send message", (chatID, msg, sender) => {
         console.log("Sent message: " + msg + " to room: " + chatID);
+        addMessageToCurrentChat(msg, chatID, sender);
         ioServer
           .to(chatID)
           .emit(
             "receive message",
-            JSON.stringify({ content: "Donkey", chatID: chatID })
+            JSON.stringify({ content: msg, chatID: chatID, sender: sender })
           );
       });
     });

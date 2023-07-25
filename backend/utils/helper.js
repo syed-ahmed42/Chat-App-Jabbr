@@ -23,24 +23,38 @@ const getUserID = async (req, res, next) => {
   return userID;
 };
 
-const convertChatToJSON = async (chat) => {
-  const messages = chat.messages;
-  let decipheredMessages = [];
-  const members = chat.members;
-  let decipheredMembers;
-  for (let i = 0; i < messages.length(); i++) {
-    let msg = await messageModel.findById(messages[i]);
-    decipheredMessages.push(msg);
+const addMessageToCurrentChat = async (pMessage, pChatID, pSender) => {
+  const message = pMessage;
+  const timestamp = new Date();
+  const sender = await userModel.findOne({ username: pSender }).lean().exec();
+  if (sender === null) {
+    return;
   }
-  for (let i = 0; i < members.length(); i++) {
-    let member = await userModel.findById(members[i]);
-    decipheredMembers.push(members);
-  }
-  const result = {
-    messages: decipheredMessages,
-    members: decipheredMembers,
+  console.log(
+    "This is sender received from client side in helper function addMessageToCurrentChat: " +
+      pSender
+  );
+  console.log(
+    "This is sender in helper function addMessageToCurrentChat: " + sender._id
+  );
+
+  const chatID = pChatID;
+
+  const newMessage = {
+    content: message,
+    timestamp: timestamp,
+    sender: sender._id,
   };
-  return result;
+
+  createdMessage = await messageModel.create(newMessage);
+
+  await chatModel.findByIdAndUpdate(
+    chatID,
+    {
+      $push: { listOfMessages: createdMessage.id },
+    },
+    { new: true }
+  );
 };
 
-module.exports = { getUserID };
+module.exports = { getUserID, addMessageToCurrentChat };

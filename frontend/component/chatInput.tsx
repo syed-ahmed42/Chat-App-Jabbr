@@ -2,20 +2,17 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 
 const ChatInput = ({ curChatID, pepsiClick }: any) => {
-  const [chatID, setChatID] = useState(curChatID);
-  console.log("Inside chat input: " + chatID);
-  useEffect(() => {
-    setChatID(curChatID);
-  }, [curChatID]);
+  const [userInput, setUserInput] = useState("");
+  console.log("Inside chat input: " + curChatID);
 
   return (
     <>
-      <input type="text" placeholder="Type something..." />
-      <button
-        onClick={() => pepsiClick(chatID, "Sending message through socket io")}
-      >
-        Click Me
-      </button>
+      <input
+        onChange={(e) => setUserInput(e.target.value)}
+        type="text"
+        placeholder="Type something..."
+      />
+      <button onClick={() => pepsiClick(curChatID, userInput)}>Click Me</button>
     </>
   );
 };

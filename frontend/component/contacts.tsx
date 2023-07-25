@@ -1,7 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { socket } from "./socket";
 
+let contactIDArr = [];
 const Contacts = ({ data, handleClick }: any) => {
   const [contacts, setContacts] = useState([""]);
   const curUser = data.username;
@@ -21,8 +23,19 @@ const Contacts = ({ data, handleClick }: any) => {
     setContacts(tempArr);
   };
 
+  const connectToChatRooms = (data: any) => {
+    let tempArr = [];
+    for (let i = 0; i < data.listOfChats.length; i++) {
+      tempArr.push(data.listOfChats[i]._id);
+    }
+    for (let i = 0; i < tempArr.length; i++) {
+      socket.emit("join room", tempArr[i]);
+    }
+  };
+
   useEffect(() => {
     populateContacts(data);
+    connectToChatRooms(data);
   }, []);
 
   console.log(contacts);
