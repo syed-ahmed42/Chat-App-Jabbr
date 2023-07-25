@@ -18,6 +18,8 @@ let fastChatData: any;
 const ChatPage = () => {
   const [chatData, setChatData]: any = useState();
   const [messages, setMessages] = useState([""]);
+  const [key, setKey] = useState(0);
+  const [findUser, setFindUser] = useState("");
 
   const [curChatStateID, setCurChatStateID] = useState("");
   const getContacts = async () => {
@@ -117,6 +119,24 @@ const ChatPage = () => {
     }
     console.log(messages);
   };
+  const handleAddContact = async () => {
+    axios.defaults.withCredentials = true;
+    await axios({
+      method: "post",
+      url: "http://localhost:3000/api/v1/chat/createChat",
+      data: {
+        username: findUser,
+      },
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    });
+    await getContacts();
+    setKey((key) => key + 1);
+  };
 
   const handleLogOut = async () => {
     axios.defaults.withCredentials = true;
@@ -145,13 +165,20 @@ const ChatPage = () => {
 
   return (
     <div className="h-full w-full">
-      <input type="text" placeholder="Search" />
+      <input
+        onChange={(e) => setFindUser(e.target.value)}
+        type="text"
+        placeholder="Search"
+      />
+      <button onClick={() => handleAddContact()} className="bg-green-400">
+        Add Contact
+      </button>
       <button onClick={() => handleLogOut()} className="bg-orange-400">
         Log out
       </button>
       <div>
         {chatData !== undefined && (
-          <Contacts data={chatData} handleClick={fetchMessages} />
+          <Contacts key={key} data={fastChatData} handleClick={fetchMessages} />
         )}
       </div>
       <div className="h-full w-full bg-cyan-500">

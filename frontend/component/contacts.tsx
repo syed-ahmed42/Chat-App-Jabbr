@@ -34,9 +34,12 @@ const Contacts = ({ data, handleClick }: any) => {
   };
 
   useEffect(() => {
-    populateContacts(data);
     connectToChatRooms(data);
   }, []);
+
+  useEffect(() => {
+    populateContacts(data);
+  }, [data]);
 
   console.log(contacts);
 

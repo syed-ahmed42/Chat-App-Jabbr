@@ -63,13 +63,15 @@ const createMessage = async (req, res, next) => {
 const createChat = async (req, res, next) => {
   const userID = await getUserID(req, res, next);
   const otherUser = await userModel.findOne({ username: req.body.username });
+  if (otherUser === null)
+    return res.status(400).json({ outcome: "Username not found" });
+
   if (otherUser.id === userID) {
     return res
       .status(400)
       .json({ outcome: "Cannot create chat with yourself" });
   }
-  if (otherUser === null)
-    return res.status(400).json({ outcome: "Username not found" });
+
   const newChat = {
     listOfMessages: [],
     members: [userID, otherUser.id],
