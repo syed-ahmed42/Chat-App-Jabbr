@@ -14,7 +14,7 @@ const ChatViewport = ({ messages, curChatID, chatData }: any) => {
   //const parsedMessages =
   //viewportMessages[0] !== "" ? JSON.parse(viewportMessages) : [];
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full overflow-auto">
       {viewportMessages.map((msg: any, index: any) => (
         <ul key={index}>{msg}</ul>
       ))}
