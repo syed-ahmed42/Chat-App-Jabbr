@@ -13,6 +13,7 @@ import ChatViewport from "./chatViewport";
 import ChatInput from "./chatInput";
 let curChatID: any = "";
 let fastMessagesArr: any = [""];
+let messageObjectArr: any = [];
 let fastChatData: any;
 
 const ChatPage = () => {
@@ -47,6 +48,7 @@ const ChatPage = () => {
       console.log("This is msgObject chatID: " + msgObject.chatID);
       if (msgObject.chatID === curChatID) {
         setMessages((prevArr) => [...prevArr, msgObject.content]);
+        messageObjectArr.push(msgObject);
         fastMessagesArr.push(msgObject.content);
       }
       getContacts();
@@ -78,7 +80,23 @@ const ChatPage = () => {
   const router = useRouter();
 
   //Using useEffect so that io only gets called once
-
+  const deleteMessageOnDatabase = async (id: any) => {
+    axios.defaults.withCredentials = true;
+    await axios({
+      method: "post",
+      url: "http://localhost:3000/api/v1/chat/deleteMessage",
+      data: {
+        id: id,
+      },
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    });
+    console.log("Message has been deleted in database");
+  };
   const fetchMessages = async (username: any) => {
     console.log("Fetching messages..." + JSON.stringify(username));
     /*console.log(
@@ -107,11 +125,13 @@ const ChatPage = () => {
         console.log("ChatID: " + curChatID);
 
         const msgContent = listOfMsgArr.map((msg: any) => msg.content);
+        const msgObject = listOfMsgArr.map((msg: any) => msg);
         /*console.log(
           "This is the chat that should be fetched: " +
             JSON.stringify(msgContent)
         );*/
         setMessages(msgContent);
+        messageObjectArr = msgObject;
         fastMessagesArr = msgContent;
         console.log("This is fastMessagesArr: " + fastMessagesArr);
         break;
@@ -150,6 +170,7 @@ const ChatPage = () => {
         console.log(err.response);
       });
     setMessages([""]);
+    messageObjectArr = [];
     fastMessagesArr = [""];
     router.replace("/login");
   };
@@ -186,6 +207,8 @@ const ChatPage = () => {
           messages={fastMessagesArr}
           curChatID={curChatID}
           chatData={fastChatData}
+          messageObject={messageObjectArr}
+          deleteMessageOnDatabase={deleteMessageOnDatabase}
         />
       </div>
       <ChatInput pepsiClick={sendMessage} curChatID={curChatID} />

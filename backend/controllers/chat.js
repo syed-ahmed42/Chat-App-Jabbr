@@ -15,6 +15,16 @@ const getChatMessages = async (req, res, next) => {
   return res.status(200).json({ message: ["hello", "hi", "hows it going"] });
 };
 
+const deleteMessage = async (req, res, next) => {
+  const deleteResult = await messageModel.findByIdAndDelete({
+    _id: req.body.id,
+  });
+  if (deleteResult === null) {
+    return res.status(400).json({ outcome: "Message does not exist" });
+  }
+  return res.status(200).json({ outcome: "Message has been deleted" });
+};
+
 const getChats = async (req, res, next) => {
   const userID = await getUserID(req, res, next);
   const curUserData = await userModel
@@ -25,7 +35,6 @@ const getChats = async (req, res, next) => {
       populate: [
         {
           path: "listOfMessages",
-          select: { _id: 0 },
           populate: { path: "sender", select: { _id: 0, username: 1 } },
         },
         { path: "members", select: { _id: 0, username: 1 } },
@@ -113,4 +122,5 @@ module.exports = {
   createChat,
   createMessage,
   getChats,
+  deleteMessage,
 };
