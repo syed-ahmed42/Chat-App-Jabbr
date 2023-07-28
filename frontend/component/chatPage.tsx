@@ -79,6 +79,23 @@ const ChatPage = () => {
   const [message, setMessage] = useState([""]);
   const router = useRouter();
 
+  const deleteChatOnDatabase = async (id: any) => {
+    axios.defaults.withCredentials = true;
+    await axios({
+      method: "post",
+      url: "http://localhost:3000/api/v1/chat/deleteChat",
+      data: {
+        id: id,
+      },
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    });
+    console.log("Chat has been deleted in database");
+  };
   //Using useEffect so that io only gets called once
   const deleteMessageOnDatabase = async (id: any) => {
     axios.defaults.withCredentials = true;
@@ -115,7 +132,7 @@ const ChatPage = () => {
           (objField: any) => objField.username === chatData.username
         ) &&
         chatData?.listOfChats[i].members.some(
-          (objField: any) => objField.username === username.contact
+          (objField: any) => objField.username === username
         )
       ) {
         const listOfMsgArr = chatData?.listOfChats[i].listOfMessages;
@@ -199,7 +216,12 @@ const ChatPage = () => {
       </button>
       <div>
         {chatData !== undefined && (
-          <Contacts key={key} data={fastChatData} handleClick={fetchMessages} />
+          <Contacts
+            key={key}
+            data={fastChatData}
+            handleClick={fetchMessages}
+            deleteChatOnDatabase={deleteChatOnDatabase}
+          />
         )}
       </div>
       <div className="h-full w-full bg-cyan-500">

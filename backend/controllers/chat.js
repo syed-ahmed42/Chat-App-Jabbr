@@ -25,6 +25,16 @@ const deleteMessage = async (req, res, next) => {
   return res.status(200).json({ outcome: "Message has been deleted" });
 };
 
+const deleteChat = async (req, res, next) => {
+  const deleteResult = await chatModel.findByIdAndDelete({
+    _id: req.body.id,
+  });
+  if (deleteResult === null) {
+    return res.status(400).json({ outcome: "Chat does not exist" });
+  }
+  return res.status(200).json({ outcome: "Chat has been deleted" });
+};
+
 const getChats = async (req, res, next) => {
   const userID = await getUserID(req, res, next);
   const curUserData = await userModel
@@ -123,4 +133,5 @@ module.exports = {
   createMessage,
   getChats,
   deleteMessage,
+  deleteChat,
 };
