@@ -32,7 +32,7 @@ const ChatViewport = ({
           <button
             className="bg-yellow-500"
             onClick={() => {
-              deleteMessageOnDatabase(msg._id);
+              deleteMessageOnDatabase(msg._id, msg.chatID, msg);
               deleteMessageOnClientSide(index);
             }}
           >

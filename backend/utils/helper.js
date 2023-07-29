@@ -47,7 +47,7 @@ const addMessageToCurrentChat = async (pMessage, pChatID, pSender) => {
   };
 
   createdMessage = await messageModel.create(newMessage);
-
+  newMessage._id = createdMessage.id;
   await chatModel.findByIdAndUpdate(
     chatID,
     {
@@ -55,6 +55,7 @@ const addMessageToCurrentChat = async (pMessage, pChatID, pSender) => {
     },
     { new: true }
   );
+  return newMessage;
 };
 
 module.exports = { getUserID, addMessageToCurrentChat };

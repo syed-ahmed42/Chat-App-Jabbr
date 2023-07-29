@@ -16,9 +16,23 @@ const getChatMessages = async (req, res, next) => {
 };
 
 const deleteMessage = async (req, res, next) => {
+  console.log(
+    "This is the messageId and chatID server-side: " +
+      req.body.id +
+      " " +
+      req.body.chatID
+  );
   const deleteResult = await messageModel.findByIdAndDelete({
     _id: req.body.id,
   });
+  await chatModel.updateOne(
+    { _id: req.body.chatID },
+    {
+      $pullAll: {
+        listOfMessages: [{ _id: req.body.id }],
+      },
+    }
+  );
   if (deleteResult === null) {
     return res.status(400).json({ outcome: "Message does not exist" });
   }

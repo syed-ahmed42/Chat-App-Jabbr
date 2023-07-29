@@ -97,13 +97,20 @@ const ChatPage = () => {
     console.log("Chat has been deleted in database");
   };
   //Using useEffect so that io only gets called once
-  const deleteMessageOnDatabase = async (id: any) => {
+  const deleteMessageOnDatabase = async (
+    id: any,
+    chatID: any,
+    msgObject: any
+  ) => {
     axios.defaults.withCredentials = true;
+    console.log("This is message id: " + id);
+    console.log("This is message object: " + JSON.stringify(msgObject));
     await axios({
       method: "post",
       url: "http://localhost:3000/api/v1/chat/deleteMessage",
       data: {
         id: id,
+        chatID: chatID,
       },
     }).catch((error) => {
       if (error.response) {
@@ -142,7 +149,10 @@ const ChatPage = () => {
         console.log("ChatID: " + curChatID);
 
         const msgContent = listOfMsgArr.map((msg: any) => msg.content);
-        const msgObject = listOfMsgArr.map((msg: any) => msg);
+        const msgObject = listOfMsgArr.map((msg: any) => ({
+          ...msg,
+          chatID: curChatID,
+        }));
         /*console.log(
           "This is the chat that should be fetched: " +
             JSON.stringify(msgContent)

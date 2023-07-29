@@ -64,15 +64,14 @@ const start = async () => {
         socket.leave(chatID);
       });
 
-      socket.on("send message", (chatID, msg, sender) => {
+      socket.on("send message", async (chatID, msg, sender) => {
         console.log("Sent message: " + msg + " to room: " + chatID);
-        addMessageToCurrentChat(msg, chatID, sender);
-        ioServer
-          .to(chatID)
-          .emit(
-            "receive message",
-            JSON.stringify({ content: msg, chatID: chatID, sender: sender })
-          );
+        const msgObject = await addMessageToCurrentChat(msg, chatID, sender);
+        msgObject.chatID = chatID;
+        console.log(
+          "This is the message object being sent: " + JSON.stringify(msgObject)
+        );
+        ioServer.to(chatID).emit("receive message", JSON.stringify(msgObject));
       });
     });
     server.listen(port, () => {
