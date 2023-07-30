@@ -12,7 +12,16 @@ const { getUserID } = require("../utils/helper");
 const chat = require("../models/chat");
 
 const getChatMessages = async (req, res, next) => {
-  return res.status(200).json({ message: ["hello", "hi", "hows it going"] });
+  const chatID = req.body.chatID;
+  if (chatID === "") {
+    console.log("ERROR: ChatID is empty string");
+    return;
+  }
+  const chat = await chatModel
+    .findById({ _id: chatID })
+    .populate("listOfMessages");
+
+  return res.status(200).json({ messages: chat.listOfMessages });
 };
 
 const deleteMessage = async (req, res, next) => {

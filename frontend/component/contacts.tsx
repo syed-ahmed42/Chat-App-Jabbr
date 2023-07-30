@@ -4,7 +4,7 @@ import axios from "axios";
 import { socket } from "./socket";
 
 let contactIDArr = [];
-const Contacts = ({ data, handleClick, deleteChatOnDatabase }: any) => {
+const Contacts = ({ data, handleClick, deleteChatOnDatabase, chatID }: any) => {
   const [contacts, setContacts]: any = useState([]);
   const curUser = data.username;
   //console.log(
@@ -55,7 +55,7 @@ const Contacts = ({ data, handleClick, deleteChatOnDatabase }: any) => {
     <>
       {contacts.map((contact: any, index: any) => (
         <div key={index}>
-          <button onClick={() => handleClick(contact.contactName)}>
+          <button onClick={() => handleClick(contact.id)}>
             {contact.contactName}
           </button>
           <button

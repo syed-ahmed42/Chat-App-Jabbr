@@ -73,6 +73,11 @@ const start = async () => {
         );
         ioServer.to(chatID).emit("receive message", JSON.stringify(msgObject));
       });
+
+      socket.on("delete message", async (curChatID) => {
+        console.log("Received request to delete message on server side");
+        ioServer.to(curChatID).emit("deleted message");
+      });
     });
     server.listen(port, () => {
       console.log(`Example app listening on port ${port}`);

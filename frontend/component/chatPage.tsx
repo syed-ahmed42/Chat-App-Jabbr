@@ -21,6 +21,7 @@ const ChatPage = () => {
   const [messages, setMessages] = useState([""]);
   const [key, setKey] = useState(0);
   const [findUser, setFindUser] = useState("");
+  const [testMessages, setTestMessages]: any = useState([]);
 
   const [curChatStateID, setCurChatStateID] = useState("");
   const getContacts = async () => {
@@ -60,6 +61,15 @@ const ChatPage = () => {
         console.log(msg + " Sent to chat id: " + curChatID);
       }*/
     });
+
+    socket.on("deleted message", async () => {
+      console.log("Received socket request to delete message");
+      if (curChatID !== "") {
+        const updatedMessages = await getMessagesByChatID(curChatID);
+        messageObjectArr = updatedMessages.data.messages;
+        setTestMessages(messageObjectArr);
+      }
+    });
   }, [socket]);
 
   useEffect(() => {
@@ -94,6 +104,7 @@ const ChatPage = () => {
         console.log(error.response.headers);
       }
     });
+
     console.log("Chat has been deleted in database");
   };
   //Using useEffect so that io only gets called once
@@ -119,6 +130,7 @@ const ChatPage = () => {
         console.log(error.response.headers);
       }
     });
+    socket.emit("delete message", curChatID);
     console.log("Message has been deleted in database");
   };
   const fetchMessages = async (username: any) => {
@@ -166,6 +178,36 @@ const ChatPage = () => {
     }
     console.log(messages);
   };
+
+  const getMessages = async (chatID: any) => {
+    const msgObject = await getMessagesByChatID(chatID);
+    messageObjectArr = msgObject.data.messages;
+    setTestMessages(messageObjectArr);
+    curChatID = chatID;
+    setCurChatStateID(chatID);
+    console.log(
+      "This is inside getMessages function, this is the messageObjectArr: " +
+        JSON.stringify(messageObjectArr)
+    );
+  };
+
+  const getMessagesByChatID = async (chatID: any) => {
+    const myMessages = await axios({
+      method: "post",
+      url: "http://localhost:3000/api/v1/chat/getChatMessages",
+      data: {
+        chatID: chatID,
+      },
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    });
+    return myMessages;
+  };
+
   const handleAddContact = async () => {
     axios.defaults.withCredentials = true;
     await axios({
@@ -228,15 +270,16 @@ const ChatPage = () => {
         {chatData !== undefined && (
           <Contacts
             key={key}
+            chatID={curChatID}
             data={fastChatData}
-            handleClick={fetchMessages}
+            handleClick={getMessages}
             deleteChatOnDatabase={deleteChatOnDatabase}
           />
         )}
       </div>
       <div className="h-full w-full bg-cyan-500">
         <ChatViewport
-          messages={fastMessagesArr}
+          messages={testMessages}
           curChatID={curChatID}
           chatData={fastChatData}
           messageObject={messageObjectArr}

@@ -9,7 +9,7 @@ const {
   deleteChat,
 } = require("../controllers/chat");
 
-router.route("/getChatMessages").get(getChatMessages);
+router.route("/getChatMessages").post(getChatMessages);
 router.route("/createChat").post(createChat);
 router.route("/createMessage").post(createMessage);
 router.route("/getChats").get(getChats);

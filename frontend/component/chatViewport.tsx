@@ -12,7 +12,8 @@ const ChatViewport = ({
   const [viewportMessages, setViewportMessages] = useState([]);
   useEffect(() => {
     setViewportMessages(messageObject);
-  }, [messageObject]);
+    console.log("These are the viewport messages: " + viewportMessages);
+  }, [messages, messageObject]);
   console.log("This is inside chat viewport: " + viewportMessages);
   //Check for unexpected JSON end of file input
   //messages = JSON.stringify(viewportMessages);
