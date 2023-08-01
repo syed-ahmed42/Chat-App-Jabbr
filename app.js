@@ -78,6 +78,15 @@ const start = async () => {
         console.log("Received request to delete message on server side");
         ioServer.to(curChatID).emit("deleted message");
       });
+
+      socket.on("delete contact", async (curChatID) => {
+        console.log("Received request to delete chat on server side");
+        ioServer.to(curChatID).emit("deleted chat");
+      });
+      socket.on("add contact", async () => {
+        console.log("Received request to add contact on server side");
+        ioServer.emit("added chat");
+      });
     });
     server.listen(port, () => {
       console.log(`Example app listening on port ${port}`);

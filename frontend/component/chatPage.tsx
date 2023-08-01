@@ -15,6 +15,7 @@ let curChatID: any = "";
 let fastMessagesArr: any = [""];
 let messageObjectArr: any = [];
 let fastChatData: any;
+let fastContactData: any;
 
 const ChatPage = () => {
   const [chatData, setChatData]: any = useState();
@@ -22,6 +23,7 @@ const ChatPage = () => {
   const [key, setKey] = useState(0);
   const [findUser, setFindUser] = useState("");
   const [testMessages, setTestMessages]: any = useState([]);
+  const [contactStateData, setContactStateData]: any = useState();
 
   const [curChatStateID, setCurChatStateID] = useState("");
   const getContacts = async () => {
@@ -36,6 +38,18 @@ const ChatPage = () => {
   useEffect(() => {
     getContacts();
   }, [curChatStateID]);
+
+  useEffect(() => {
+    if (chatData !== undefined) {
+      const setBeginningContactData = async () => {
+        if (chatData !== undefined) {
+          const startingContactData = await getContactsData(chatData.username);
+          setContactStateData(startingContactData);
+        }
+      };
+      setBeginningContactData();
+    }
+  }, [chatData]);
 
   useEffect(() => {
     socket.on("receive message", (msg) => {
@@ -70,6 +84,27 @@ const ChatPage = () => {
         setTestMessages(messageObjectArr);
       }
     });
+
+    socket.on("deleted chat", async () => {
+      console.log("Received socket request to delete chat");
+      await getContacts();
+      messageObjectArr = [];
+      setTestMessages([]);
+
+      if (chatData !== undefined) {
+        const preloadedContactData = await getContactsData(chatData.username);
+        setContactStateData(preloadedContactData);
+      }
+    });
+
+    socket.on("added chat", async () => {
+      console.log("Received socket request to add chat");
+      await getContacts();
+      if (chatData !== undefined) {
+        const preloadedContactData = await getContactsData(chatData.username);
+        setContactStateData(preloadedContactData);
+      }
+    });
   }, [socket]);
 
   useEffect(() => {
@@ -84,10 +119,43 @@ const ChatPage = () => {
     socket.on("connection", () => {
       console.log("Connected on the client side");
     });
+
+    /*const setBeginningContactData = async () => {
+      if (chatData !== undefined) {
+        const startingContactData = await getContactsData(chatData.username);
+        setContactStateData(startingContactData);
+      }
+    };
+    setBeginningContactData();*/
   }, []);
 
   const [message, setMessage] = useState([""]);
   const router = useRouter();
+
+  const getContactsData = async (username: any) => {
+    const contactData = await axios({
+      method: "post",
+      url: "http://localhost:3000/api/v1/chat/getContacts",
+      data: {
+        username: username,
+      },
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    });
+    const tempArr = contactData.data.outcome;
+    console.log("This is tempArr: " + JSON.stringify(tempArr));
+    return tempArr;
+  };
+
+  const setContactVariables = async (username: any) => {
+    const contactData = await getContactsData(username);
+    setContactStateData(contactData);
+    fastContactData = contactData;
+  };
 
   const deleteChatOnDatabase = async (id: any) => {
     axios.defaults.withCredentials = true;
@@ -104,6 +172,7 @@ const ChatPage = () => {
         console.log(error.response.headers);
       }
     });
+    socket.emit("delete contact", curChatID);
 
     console.log("Chat has been deleted in database");
   };
@@ -210,7 +279,7 @@ const ChatPage = () => {
 
   const handleAddContact = async () => {
     axios.defaults.withCredentials = true;
-    await axios({
+    const chatCreationResponse = await axios({
       method: "post",
       url: "http://localhost:3000/api/v1/chat/createChat",
       data: {
@@ -223,8 +292,13 @@ const ChatPage = () => {
         console.log(error.response.headers);
       }
     });
-    await getContacts();
-    setKey((key) => key + 1);
+    console.log(
+      "This is post request outcome inside handleAddContact: " +
+        chatCreationResponse
+    );
+    if (chatCreationResponse !== undefined) {
+      socket.emit("add contact");
+    }
   };
 
   const handleLogOut = async () => {
@@ -272,6 +346,10 @@ const ChatPage = () => {
             key={key}
             chatID={curChatID}
             data={fastChatData}
+            stateData={chatData}
+            setContactVariables={setContactVariables}
+            getContactsData={getContactsData}
+            contactStateData={contactStateData}
             handleClick={getMessages}
             deleteChatOnDatabase={deleteChatOnDatabase}
           />

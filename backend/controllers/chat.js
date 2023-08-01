@@ -21,7 +21,44 @@ const getChatMessages = async (req, res, next) => {
     .findById({ _id: chatID })
     .populate("listOfMessages");
 
+  if (chat === null) {
+    console.log("ERROR: Chat does not exist");
+    return;
+  }
   return res.status(200).json({ messages: chat.listOfMessages });
+};
+
+const getContacts = async (req, res, next) => {
+  const username = req.body.username;
+
+  if (!username) {
+    console.log("ERROR: No username provided");
+    return;
+  }
+  const listOfContacts = await userModel
+    .findOne({ username: username })
+    .select("listOfChats")
+    .populate({
+      path: "listOfChats",
+      select: { _id: 1 },
+      populate: {
+        path: "members",
+        select: { _id: 0, username: 1 },
+      },
+    });
+  let contactList = [];
+  for (let i = 0; i < listOfContacts.listOfChats.length; i++) {
+    let contactData = {
+      contactName:
+        listOfContacts.listOfChats[i].members[0].username === username
+          ? listOfContacts.listOfChats[i].members[1].username
+          : listOfContacts.listOfChats[i].members[0].username,
+    };
+    contactData.id = listOfContacts.listOfChats[i]._id;
+    contactList.push(contactData);
+  }
+
+  return res.status(200).json({ outcome: contactList });
 };
 
 const deleteMessage = async (req, res, next) => {
@@ -49,12 +86,44 @@ const deleteMessage = async (req, res, next) => {
 };
 
 const deleteChat = async (req, res, next) => {
-  const deleteResult = await chatModel.findByIdAndDelete({
+  const chatToBeDeleted = await chatModel.findById({
     _id: req.body.id,
   });
-  if (deleteResult === null) {
+  const firstMemberID = chatToBeDeleted.members[0];
+  const secondMemberID = chatToBeDeleted.members[1];
+  console.log(
+    "This is inside deleteChat function: " +
+      firstMemberID +
+      " " +
+      secondMemberID
+  );
+  //Delete chat from userModel
+  await userModel.updateOne(
+    { _id: firstMemberID },
+    {
+      $pullAll: {
+        listOfChats: [{ _id: req.body.id }],
+      },
+    }
+  );
+
+  await userModel.updateOne(
+    { _id: secondMemberID },
+    {
+      $pullAll: {
+        listOfChats: [{ _id: req.body.id }],
+      },
+    }
+  );
+
+  const isChatDeleted = await chatModel.findByIdAndDelete({
+    _id: req.body.id,
+  });
+
+  if (isChatDeleted === null) {
     return res.status(400).json({ outcome: "Chat does not exist" });
   }
+
   return res.status(200).json({ outcome: "Chat has been deleted" });
 };
 
@@ -157,4 +226,5 @@ module.exports = {
   getChats,
   deleteMessage,
   deleteChat,
+  getContacts,
 };

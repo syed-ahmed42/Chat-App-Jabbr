@@ -7,6 +7,7 @@ const {
   getChats,
   deleteMessage,
   deleteChat,
+  getContacts,
 } = require("../controllers/chat");
 
 router.route("/getChatMessages").post(getChatMessages);
@@ -15,5 +16,6 @@ router.route("/createMessage").post(createMessage);
 router.route("/getChats").get(getChats);
 router.route("/deleteMessage").post(deleteMessage);
 router.route("/deleteChat").post(deleteChat);
+router.route("/getContacts").post(getContacts);
 
 module.exports = router;
