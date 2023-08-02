@@ -20,7 +20,7 @@ const LoginPage = () => {
       )
       .then((res) => {
         console.log(res);
-        router.push("/chat");
+        router.replace("/chat");
       })
       .catch((err) => {
         console.log(err);

@@ -111,7 +111,7 @@ const ChatPage = () => {
     console.log("CLIENT SIDE: Joining room with ID: " + curChatID);
     socket.emit("join room", curChatStateID);
   }, [curChatStateID]);
-  if (chatData !== undefined) {
+  if (chatData !== undefined && chatData !== null) {
     console.log("This is contact data: " + chatData.username);
   }
 
@@ -315,7 +315,9 @@ const ChatPage = () => {
     setMessages([""]);
     messageObjectArr = [];
     fastMessagesArr = [""];
-    router.replace("/login");
+    location.reload();
+    //router.replace("/login");
+    //location.reload();
   };
 
   const sendMessage = (chatID: any, msg: any) => {
