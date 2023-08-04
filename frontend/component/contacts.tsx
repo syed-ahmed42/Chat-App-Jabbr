@@ -57,7 +57,6 @@ const Contacts = ({
               className="bg-pink-500"
               onClick={() => {
                 deleteChatOnDatabase(contact.id);
-                setVariables();
               }}
             >
               Delete

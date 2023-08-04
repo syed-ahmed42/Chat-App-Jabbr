@@ -52,7 +52,8 @@ const login = async (req, res, next) => {
         httpOnly: false,
         //Set cookie expiry to httpOnly cookie expiry time
         expires: req.session.cookie._expires,
-        secure: false,
+        /*secure: true,
+        sameSite: "none",*/
       });
     }
 

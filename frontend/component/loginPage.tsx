@@ -2,16 +2,18 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import * as CONSTANTS from "../utils/constants";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const router = useRouter();
+  //console.log("This is process env: " + JSON.stringify(process.env));
 
   const handleClick = (pEmail: string, pPass: string) => {
     axios
       .post(
-        "http://localhost:3000/api/v1/auth/login",
+        `${CONSTANTS.dev}api/v1/auth/login`,
         {
           email: pEmail,
           password: pPass,

@@ -11,6 +11,10 @@ import { MongoClient } from "mongodb";
 import Contacts from "./contacts";
 import ChatViewport from "./chatViewport";
 import ChatInput from "./chatInput";
+import * as CONSTANTS from "../utils/constants";
+
+const API_LINK = CONSTANTS.dev;
+
 let curChatID: any = "";
 let fastMessagesArr: any = [""];
 let messageObjectArr: any = [];
@@ -29,7 +33,7 @@ const ChatPage = () => {
   const getContacts = async () => {
     //This line sends cookies to the server
     axios.defaults.withCredentials = true;
-    const res = await axios.get("http://localhost:3000/api/v1/chat/getChats");
+    const res = await axios.get(API_LINK + "api/v1/chat/getChats");
 
     setChatData(res.data);
     fastChatData = res.data;
@@ -135,7 +139,7 @@ const ChatPage = () => {
   const getContactsData = async (username: any) => {
     const contactData = await axios({
       method: "post",
-      url: "http://localhost:3000/api/v1/chat/getContacts",
+      url: API_LINK + "api/v1/chat/getContacts",
       data: {
         username: username,
       },
@@ -161,7 +165,7 @@ const ChatPage = () => {
     axios.defaults.withCredentials = true;
     await axios({
       method: "post",
-      url: "http://localhost:3000/api/v1/chat/deleteChat",
+      url: API_LINK + "api/v1/chat/deleteChat",
       data: {
         id: id,
       },
@@ -187,7 +191,7 @@ const ChatPage = () => {
     console.log("This is message object: " + JSON.stringify(msgObject));
     await axios({
       method: "post",
-      url: "http://localhost:3000/api/v1/chat/deleteMessage",
+      url: API_LINK + "api/v1/chat/deleteMessage",
       data: {
         id: id,
         chatID: chatID,
@@ -263,7 +267,7 @@ const ChatPage = () => {
   const getMessagesByChatID = async (chatID: any) => {
     const myMessages = await axios({
       method: "post",
-      url: "http://localhost:3000/api/v1/chat/getChatMessages",
+      url: API_LINK + "api/v1/chat/getChatMessages",
       data: {
         chatID: chatID,
       },
@@ -281,7 +285,7 @@ const ChatPage = () => {
     axios.defaults.withCredentials = true;
     const chatCreationResponse = await axios({
       method: "post",
-      url: "http://localhost:3000/api/v1/chat/createChat",
+      url: API_LINK + "api/v1/chat/createChat",
       data: {
         username: findUser,
       },
@@ -304,7 +308,7 @@ const ChatPage = () => {
   const handleLogOut = async () => {
     axios.defaults.withCredentials = true;
     await axios
-      .post("http://localhost:3000/api/v1/auth/logout", {
+      .post(API_LINK + "api/v1/auth/logout", {
         withCredentials: true,
       })
       .then((res) => {})
