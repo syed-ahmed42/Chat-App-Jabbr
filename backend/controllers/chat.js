@@ -22,7 +22,7 @@ const getChatMessages = async (req, res, next) => {
     .populate("listOfMessages");
 
   if (chat === null) {
-    console.log("ERROR: Chat does not exist");
+    res.status(200).json({ outcome: "ERROR: Chat does not exist" });
     return;
   }
   return res.status(200).json({ messages: chat.listOfMessages });

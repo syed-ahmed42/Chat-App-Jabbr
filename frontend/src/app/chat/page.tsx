@@ -5,8 +5,8 @@ import RedirectFromLogin from "../../../utils/redirectFromChat";
 
 const Chat = () => {
   return (
-    <RedirectFromChat>
-      <ChatPage />;
+    <RedirectFromChat >
+      <ChatPage />
     </RedirectFromChat>
   );
 };

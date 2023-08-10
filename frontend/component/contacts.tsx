@@ -2,6 +2,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { socket } from "./socket";
+import '../styles/contactStyle.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faX } from '@fortawesome/free-solid-svg-icons'
 
 let contactIDArr = [];
 let fastContactData: any;
@@ -16,6 +19,7 @@ const Contacts = ({
   getContactsData,
 }: any) => {
   const [contacts, setContacts]: any = useState([]);
+  const [active, setActive] = useState("");
   const curUser = data.username;
   //console.log(
   //    "This is in contacts component: " + data.listOfChats[0].members[1].username
@@ -39,6 +43,11 @@ const Contacts = ({
     fastContactData = await getContactsData(username);
     setContacts(fastContactData);
   };
+
+  const setActiveOnClick = (keyID : any) => {
+    setActive(keyID);
+  }
+
   useEffect(() => {
     setContacts(contactStateData);
   }, [contactStateData]);
@@ -46,25 +55,25 @@ const Contacts = ({
   console.log(contacts);
 
   return (
-    <>
+    <div className="contactNameButtonContainersHolder h-full">
       {contacts !== undefined &&
         contacts.map((contact: any, index: any) => (
-          <div key={contact.contactName}>
-            <button onClick={() => handleClick(contact.id)}>
+          <div className="contactNameButtonContainer h-full" key={contact.contactName}>
+            <button className={active === contact.contactName ? "contactNameButton contactNameButtonActive" : "contactNameButton"} onClick={() => {handleClick(contact.id); setActiveOnClick(contact.contactName)}}>
               {contact.contactName}
             </button>
             <button
-              className="bg-pink-500"
+              className="deleteButton"
               onClick={() => {
                 deleteChatOnDatabase(contact.id);
-                setVariables();
+                
               }}
             >
-              Delete
+              <FontAwesomeIcon className="deleteButtonIcon" icon={faX} />
             </button>
           </div>
         ))}
-    </>
+    </div>
   );
 };
 

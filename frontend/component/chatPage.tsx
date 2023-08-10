@@ -11,6 +11,11 @@ import { MongoClient } from "mongodb";
 import Contacts from "./contacts";
 import ChatViewport from "./chatViewport";
 import ChatInput from "./chatInput";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import '../styles/searchStyle.css'
+import '../styles/chatPage.css'
+
 let curChatID: any = "";
 let fastMessagesArr: any = [""];
 let messageObjectArr: any = [];
@@ -330,43 +335,58 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="h-full w-full">
-      <input
-        onChange={(e) => setFindUser(e.target.value)}
-        type="text"
-        placeholder="Search"
-      />
-      <button onClick={() => handleAddContact()} className="bg-green-400">
-        Add Contact
-      </button>
-      <button onClick={() => handleLogOut()} className="bg-orange-400">
-        Log out
-      </button>
-      <div>
-        {chatData !== undefined && (
-          <Contacts
-            key={key}
-            chatID={curChatID}
-            data={fastChatData}
-            stateData={chatData}
-            setContactVariables={setContactVariables}
-            getContactsData={getContactsData}
-            contactStateData={contactStateData}
-            handleClick={getMessages}
-            deleteChatOnDatabase={deleteChatOnDatabase}
-          />
-        )}
-      </div>
-      <div className="h-full w-full bg-cyan-500">
-        <ChatViewport
-          messages={testMessages}
-          curChatID={curChatID}
-          chatData={fastChatData}
-          messageObject={messageObjectArr}
-          deleteMessageOnDatabase={deleteMessageOnDatabase}
+    <div className="h-full w-full flex">
+      <div className="contactListBackground">
+        <div className="searchContainer">
+        <input
+          onChange={(e) => setFindUser(e.target.value)}
+          type="text"
+          placeholder="Search"
+          className="searchBox focus:outline-none"
+          
         />
+        <button onClick={() => handleAddContact()} className="searchButton">
+        <FontAwesomeIcon className="searchButtonIcon" icon={faMagnifyingGlass} />
+        </button>
+        </div>
+        
+        <button onClick={() => handleLogOut()} className="bg-orange-400">
+          Log out
+        </button>
+      
+      
+        <div className="h-full">
+          {chatData !== undefined && (
+            <Contacts
+              key={key}
+              chatID={curChatID}
+              data={fastChatData}
+              stateData={chatData}
+              setContactVariables={setContactVariables}
+              getContactsData={getContactsData}
+              contactStateData={contactStateData}
+              handleClick={getMessages}
+              deleteChatOnDatabase={deleteChatOnDatabase}
+            />
+          )}
+        </div>
       </div>
-      <ChatInput pepsiClick={sendMessage} curChatID={curChatID} />
+      <div className="viewportBackground h-full w-full">
+        <div className=" viewportDimensions">
+        <div >
+          <ChatViewport
+            messages={testMessages}
+            curChatID={curChatID}
+            chatData={fastChatData}
+            messageObject={messageObjectArr}
+            deleteMessageOnDatabase={deleteMessageOnDatabase}
+          />
+        </div>
+        <ChatInput pepsiClick={sendMessage} curChatID={curChatID} />
+      </div>
+
+        </div>
+       
     </div>
   );
 };

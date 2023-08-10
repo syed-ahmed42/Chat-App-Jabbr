@@ -26,7 +26,7 @@ const ChatViewport = ({
   };
 
   return (
-    <div className="w-full h-full overflow-auto">
+    <div className="overflow-auto">
       {viewportMessages.map((msg: any, index: any) => (
         <div key={index}>
           <ul>{msg.content}</ul>

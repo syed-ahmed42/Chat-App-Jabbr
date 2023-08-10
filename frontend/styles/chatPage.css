@@ -1,0 +1,15 @@
+.contactListBackground {
+    background-color: #4b4b4b;
+}
+
+.viewportDimensions {
+    width: 60%;
+    background-color: red;
+}
+
+.viewportBackground {
+    background-image: url("../images/fathers_stuff-wallpaper-2880x1800.jpeg");
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+}

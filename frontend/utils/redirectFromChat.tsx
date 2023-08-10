@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { MongoClient } from "mongodb";
 import { ObjectId } from "mongodb";
+import "../styles/redirectFromChat.css"
 
 const RedirectFromChat = async ({ children }: any) => {
   const sessionCookieExists = cookies().has("sid");
@@ -28,7 +29,7 @@ const RedirectFromChat = async ({ children }: any) => {
   }
 
   if (curSession && curSession?.length !== 0) {
-    return <>{children}</>;
+    return <div className="h-full w-full whitespaceFix">{children}</div>;
   }
   redirect("/login");
 };
