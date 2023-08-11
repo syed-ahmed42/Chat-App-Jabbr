@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { socket } from "./socket";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "../styles/messageStyles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
@@ -13,8 +13,33 @@ const ChatViewport = ({
   deleteMessageOnDatabase,
 }: any) => {
   const [viewportMessages, setViewportMessages] = useState([]);
+  const [showContent, setShowContent] = useState(false);
+
+  //Scroll to bottom behaviour
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current &&
+      messagesEndRef.current.scrollIntoView({
+        behavior: "instant",
+        block: "nearest",
+        inline: "start",
+      });
+  };
+
+  useEffect(() => {
+    console.log("UseEffect triggered in chatViewport");
+    setShowContent(false);
+    setTimeout(() => {
+      setShowContent(true);
+    }, 50);
+  }, []);
+
   useEffect(() => {
     setViewportMessages(messageObject);
+    setShowContent(false);
+    setTimeout(() => {
+      setShowContent(true);
+    }, 50);
     console.log("These are the viewport messages: " + viewportMessages);
     console.log(
       "This is the name of the sender (found within chatViewport): " +
@@ -34,8 +59,16 @@ const ChatViewport = ({
     setViewportMessages(newMessages);
   };
 
+  scrollToBottom();
+
   return (
-    <div className="chatViewportContainer">
+    <div
+      className={
+        showContent
+          ? "chatViewportContainer "
+          : "chatViewportContainer makeChatInvisible"
+      }
+    >
       {viewportMessages.map((msg: any, index: any) => (
         <div key={index}>
           <div className="messageWrapper">
@@ -64,6 +97,7 @@ const ChatViewport = ({
               </button>
             </div>
           </div>
+          <div ref={messagesEndRef} />
         </div>
       ))}
     </div>

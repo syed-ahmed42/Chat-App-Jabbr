@@ -31,3 +31,7 @@
 .chatViewportHolder::-webkit-scrollbar {
   display: none;
 }
+
+.makeChatInvisible {
+  visibility: hidden;
+}
