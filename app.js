@@ -14,6 +14,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const cookieParser = require("cookie-parser");
 const { addMessageToCurrentChat } = require("./backend/utils/helper");
+const userModel = require("./backend/models/user");
 
 app.use(
   cookieParser(
@@ -68,6 +69,7 @@ const start = async () => {
         console.log("Sent message: " + msg + " to room: " + chatID);
         const msgObject = await addMessageToCurrentChat(msg, chatID, sender);
         msgObject.chatID = chatID;
+        msgObject.sender = { username: sender };
         console.log(
           "This is the message object being sent: " + JSON.stringify(msgObject)
         );

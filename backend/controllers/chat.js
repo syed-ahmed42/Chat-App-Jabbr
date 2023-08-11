@@ -17,14 +17,19 @@ const getChatMessages = async (req, res, next) => {
     console.log("ERROR: ChatID is empty string");
     return;
   }
-  const chat = await chatModel
-    .findById({ _id: chatID })
-    .populate("listOfMessages");
+  const chat = await chatModel.findById({ _id: chatID }).populate({
+    path: "listOfMessages",
+    populate: {
+      path: "sender",
+      select: { username: 1 },
+    },
+  });
 
   if (chat === null) {
     res.status(200).json({ outcome: "ERROR: Chat does not exist" });
     return;
   }
+
   return res.status(200).json({ messages: chat.listOfMessages });
 };
 

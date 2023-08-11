@@ -1,0 +1,42 @@
+.messageMetadataStyle {
+  display: flex;
+}
+
+.timestampStyle {
+  padding-left: 10px;
+}
+
+.messageWrapper ul {
+  flex: 1;
+}
+
+.messageWrapper {
+  background-color: #4b4b4b;
+  color: white;
+  display: flex;
+}
+
+.deleteMessageButtonContainer {
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+}
+
+.deleteMessageButtonStyle {
+  border-radius: 50%;
+}
+
+.senderStyle {
+  font-weight: bolder;
+}
+
+.timestampStyle {
+  font-size: small;
+  display: flex;
+  align-items: center;
+  color: #b4b4b4;
+}
+
+.messageWrapper:hover {
+  filter: brightness(120%);
+}
