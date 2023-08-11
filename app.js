@@ -67,6 +67,10 @@ const start = async () => {
 
       socket.on("send message", async (chatID, msg, sender) => {
         console.log("Sent message: " + msg + " to room: " + chatID);
+        if (msg === "") {
+          console.log("ERROR: Message is empty string");
+          return;
+        }
         const msgObject = await addMessageToCurrentChat(msg, chatID, sender);
         msgObject.chatID = chatID;
         msgObject.sender = { username: sender };

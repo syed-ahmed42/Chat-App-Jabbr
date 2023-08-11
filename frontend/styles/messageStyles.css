@@ -40,3 +40,13 @@
 .messageWrapper:hover {
   filter: brightness(120%);
 }
+
+.chatViewportContainer {
+  overflow: scroll;
+
+  max-height: 100vh;
+}
+
+.chatViewportContainer::-webkit-scrollbar {
+  display: none;
+}

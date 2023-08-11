@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
+import "../styles/chatInputStyles.css";
 
 const ChatInput = ({ curChatID, pepsiClick }: any) => {
   const [userInput, setUserInput] = useState("");
@@ -10,9 +11,16 @@ const ChatInput = ({ curChatID, pepsiClick }: any) => {
       <input
         onChange={(e) => setUserInput(e.target.value)}
         type="text"
+        value={userInput}
         placeholder="Type something..."
+        className="chatInputBox"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            pepsiClick(curChatID, userInput);
+            setUserInput("");
+          }
+        }}
       />
-      <button onClick={() => pepsiClick(curChatID, userInput)}>Click Me</button>
     </>
   );
 };

@@ -375,7 +375,7 @@ const ChatPage = () => {
       </div>
       <div className="viewportBackground h-full w-full">
         <div className=" viewportDimensions">
-          <div>
+          <div className="chatViewportHolder">
             <ChatViewport
               messages={testMessages}
               curChatID={curChatID}
@@ -384,7 +384,9 @@ const ChatPage = () => {
               deleteMessageOnDatabase={deleteMessageOnDatabase}
             />
           </div>
-          <ChatInput pepsiClick={sendMessage} curChatID={curChatID} />
+          <div className="chatInputHolder">
+            <ChatInput pepsiClick={sendMessage} curChatID={curChatID} />
+          </div>
         </div>
       </div>
     </div>

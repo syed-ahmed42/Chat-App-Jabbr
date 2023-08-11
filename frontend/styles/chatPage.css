@@ -1,15 +1,33 @@
 .contactListBackground {
-    background-color: #4b4b4b;
+  background-color: #4b4b4b;
 }
 
 .viewportDimensions {
-    width: 60%;
-    background-color: red;
+  width: 60%;
+  background-color: red;
+  display: flex;
+  flex-direction: column;
 }
 
 .viewportBackground {
-    background-image: url("../images/fathers_stuff-wallpaper-2880x1800.jpeg");
-    background-size: cover;
-    display: flex;
-    justify-content: center;
+  background-image: url("../images/fathers_stuff-wallpaper-2880x1800.jpeg");
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+}
+
+.chatInputHolder {
+  background-color: blue;
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+}
+
+.chatViewportHolder {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.chatViewportHolder::-webkit-scrollbar {
+  display: none;
 }
