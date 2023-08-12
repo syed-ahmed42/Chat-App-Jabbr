@@ -4,7 +4,7 @@
 
 .viewportDimensions {
   width: 60%;
-  background-color: red;
+  background-color: transparent;
   display: flex;
   flex-direction: column;
 }
@@ -21,6 +21,10 @@
   width: 100%;
   position: sticky;
   bottom: 0;
+
+  height: 5%;
+  max-height: 40px;
+  border-radius: 10px;
 }
 
 .chatViewportHolder {

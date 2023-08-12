@@ -38,10 +38,10 @@ const login = async (req, res, next) => {
     const result = bcrypt.compareSync(req.body.password, user.password);
 
     if (result === null) {
-      return res.status(400).json({ outcome: "An error occured" });
+      return res.status(400).json({ result: "An error occured" });
     }
     if (result === false) {
-      return res.status(400).json({ outcome: "Incorrect password" });
+      return res.status(400).json({ result: "Incorrect password" });
     }
     req.session.userId = user.id;
 
@@ -56,7 +56,7 @@ const login = async (req, res, next) => {
       });
     }
 
-    return res.status(200).json({ type: "Successfully logged in" });
+    return res.status(200).json({ result: "Successfully logged in" });
   } catch (error) {
     console.log(error);
   }

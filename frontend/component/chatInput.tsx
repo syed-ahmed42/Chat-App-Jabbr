@@ -12,7 +12,7 @@ const ChatInput = ({ curChatID, pepsiClick }: any) => {
         onChange={(e) => setUserInput(e.target.value)}
         type="text"
         value={userInput}
-        placeholder="Type something..."
+        placeholder="Message"
         className="chatInputBox"
         onKeyDown={(e) => {
           if (e.key === "Enter") {

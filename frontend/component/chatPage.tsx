@@ -12,9 +12,11 @@ import Contacts from "./contacts";
 import ChatViewport from "./chatViewport";
 import ChatInput from "./chatInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "../styles/searchStyle.css";
 import "../styles/chatPage.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 let curChatID: any = "";
 let fastMessagesArr: any = [""];
@@ -165,7 +167,7 @@ const ChatPage = () => {
 
   const deleteChatOnDatabase = async (id: any) => {
     axios.defaults.withCredentials = true;
-    await axios({
+    const deleteResponse = await axios({
       method: "post",
       url: "http://localhost:3000/api/v1/chat/deleteChat",
       data: {
@@ -179,7 +181,16 @@ const ChatPage = () => {
       }
     });
     socket.emit("delete contact", curChatID);
-
+    toast.success(deleteResponse.data.outcome, {
+      position: "bottom-center",
+      autoClose: 2500,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
     console.log("Chat has been deleted in database");
   };
   //Using useEffect so that io only gets called once
@@ -296,6 +307,16 @@ const ChatPage = () => {
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
+        toast.error(error.response.data.outcome, {
+          position: "bottom-center",
+          autoClose: 2500,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       }
     });
     console.log(
@@ -304,6 +325,20 @@ const ChatPage = () => {
     );
     if (chatCreationResponse !== undefined) {
       socket.emit("add contact");
+      console.log(
+        "This is inside chatCreationResponse: " +
+          chatCreationResponse.data.outcome
+      );
+      toast.success(chatCreationResponse.data.outcome, {
+        position: "bottom-center",
+        autoClose: 2500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   };
 
@@ -343,19 +378,29 @@ const ChatPage = () => {
             onChange={(e) => setFindUser(e.target.value)}
             type="text"
             placeholder="Search"
+            value={findUser}
             className="searchBox focus:outline-none"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleAddContact();
+                setFindUser("");
+              }
+            }}
           />
-          <button onClick={() => handleAddContact()} className="searchButton">
-            <FontAwesomeIcon
-              className="searchButtonIcon"
-              icon={faMagnifyingGlass}
-            />
+          <button
+            onClick={() => {
+              handleAddContact();
+              setFindUser("");
+            }}
+            className="searchButton"
+          >
+            <FontAwesomeIcon className="searchButtonIcon" icon={faPlus} />
           </button>
         </div>
 
-        <button onClick={() => handleLogOut()} className="bg-orange-400">
+        {/*<button onClick={() => handleLogOut()} className="bg-orange-400">
           Log out
-        </button>
+  </button>*/}
 
         <div className="h-full">
           {chatData !== undefined && (
@@ -369,6 +414,7 @@ const ChatPage = () => {
               contactStateData={contactStateData}
               handleClick={getMessages}
               deleteChatOnDatabase={deleteChatOnDatabase}
+              handleLogOut={handleLogOut}
             />
           )}
         </div>
@@ -384,11 +430,25 @@ const ChatPage = () => {
               deleteMessageOnDatabase={deleteMessageOnDatabase}
             />
           </div>
-          <div className="chatInputHolder">
-            <ChatInput pepsiClick={sendMessage} curChatID={curChatID} />
-          </div>
+          {curChatID !== "" && (
+            <div className="chatInputHolder">
+              <ChatInput pepsiClick={sendMessage} curChatID={curChatID} />
+            </div>
+          )}
         </div>
       </div>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2500}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </div>
   );
 };
