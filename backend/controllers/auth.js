@@ -12,10 +12,10 @@ const createAccount = async (req, res, next) => {
     const userExist = await userModel.find({ username: req.body.username });
     const emailExist = await userModel.find({ email: req.body.email });
     if (userExist.toString() !== "") {
-      return res.status(400).send({ message: "Username is taken" });
+      return res.status(400).send({ result: "Username is taken" });
     }
     if (emailExist.toString() !== "") {
-      return res.status(400).send({ message: "Email is already registered" });
+      return res.status(400).send({ result: "Email is already registered" });
     }
     const newAccount = {
       username: req.body.username,
