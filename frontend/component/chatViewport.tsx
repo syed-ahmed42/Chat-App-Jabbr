@@ -5,6 +5,8 @@ import "../styles/messageStyles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
+let messageLength = 0;
+
 const ChatViewport = ({
   messages,
   curChatID,
@@ -36,10 +38,13 @@ const ChatViewport = ({
 
   useEffect(() => {
     setViewportMessages(messageObject);
-    setShowContent(false);
-    setTimeout(() => {
-      setShowContent(true);
-    }, 50);
+    if (messageObject.length >= messageLength) {
+      setShowContent(false);
+      setTimeout(() => {
+        setShowContent(true);
+      }, 50);
+    }
+
     console.log("These are the viewport messages: " + viewportMessages);
     console.log(
       "This is the name of the sender (found within chatViewport): " +

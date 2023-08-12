@@ -89,7 +89,7 @@ const ChatPage = () => {
       if (curChatID !== "") {
         const updatedMessages = await getMessagesByChatID(curChatID);
         messageObjectArr = updatedMessages.data.messages;
-        setTestMessages(messageObjectArr);
+        //setTestMessages(messageObjectArr);
       }
     });
 
