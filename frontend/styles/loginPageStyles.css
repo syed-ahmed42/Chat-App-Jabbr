@@ -109,3 +109,8 @@
 .signUpText {
   color: #3f63bf;
 }
+
+.logo {
+  display: flex;
+  justify-content: center;
+}

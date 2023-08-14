@@ -100,6 +100,9 @@ const CreateAccountPage = () => {
     <div className="loginBackground">
       <div className="mainLoginContentWrapper">
         <div className="loginBox">
+          <div className="loginBoxHeaderText logo">
+            <h1>Jabbr</h1>
+          </div>
           <div className="loginBoxHeaderText">
             <h1>Create your account</h1>
           </div>

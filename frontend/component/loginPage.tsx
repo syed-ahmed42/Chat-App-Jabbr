@@ -94,6 +94,9 @@ const LoginPage = () => {
     <div className="loginBackground">
       <div className="mainLoginContentWrapper">
         <div className="loginBox">
+          <div className="loginBoxHeaderText logo">
+            <h1>Jabbr</h1>
+          </div>
           <div className="loginBoxHeaderText">
             <h1>Sign in to your account</h1>
           </div>
