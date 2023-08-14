@@ -157,6 +157,12 @@ const createMessage = async (req, res, next) => {
   const sender = await getUserID(req, res, next);
   const chatID = req.body.chatID;
 
+  if (message.length > 200) {
+    return res
+      .status(400)
+      .json({ outcome: "Message too long. Character limit is 200" });
+  }
+
   const newMessage = {
     content: message,
     timestamp: timestamp,

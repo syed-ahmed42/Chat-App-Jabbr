@@ -365,6 +365,21 @@ const ChatPage = () => {
     if (chatID === "") {
       console.log("ERROR: ChatID is empty string");
     }
+
+    if (msg.length > 200) {
+      toast.error("Message exceeds character limit (200).", {
+        position: "bottom-center",
+        autoClose: 2500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return;
+    }
+
     if (chatID !== "") {
       socket.emit("send message", chatID, msg, chatData.username);
     }
