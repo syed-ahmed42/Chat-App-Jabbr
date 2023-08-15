@@ -11,3 +11,5 @@ https://github.com/syed-ahmed42/batman/assets/76643525/7f8833f8-3c4d-4a69-8779-0
 
 https://media.giphy.com/media/mfL1sSDVNEqH1lJFur/giphy.gif
 
+<div style="width:100%;height:0;padding-bottom:53%;position:relative;"><iframe src="https://giphy.com/embed/mfL1sSDVNEqH1lJFur" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/news-donald-trump-indictment-indicted-mfL1sSDVNEqH1lJFur">via GIPHY</a></p>
+
