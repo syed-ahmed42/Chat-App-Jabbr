@@ -5,23 +5,24 @@ This is a realtime chat app created using MERN stack. All user and chat data is 
 ## Features
 
 ### ⭐ Realtime Updates
-![GIF_Convert_RealTime_AdobeExpress](https://github.com/syed-ahmed42/batman/assets/76643525/ad4f7c04-0c32-4d4b-bd0c-c5f3a07b6224)
+
+![GIF_Convert_RealTime_AdobeExpress](https://github.com/syed-ahmed42/Chat-App-Jabbr/assets/76643525/80133315-bd86-4580-90a0-b9cc071c5b59)
 
  
 ### ⭐ Dynamic UI
-![GIF_Convert_DynamicUI_AdobeExpress](https://github.com/syed-ahmed42/batman/assets/76643525/d13cdab7-777b-4c1a-87cf-b348a6095734)
+
+![GIF_Convert_DynamicUI_AdobeExpress](https://github.com/syed-ahmed42/Chat-App-Jabbr/assets/76643525/967ed3fc-583e-4eb8-a94e-9074674f783a)
 
 
 ### ⭐ Persistent Data Store
-![Mongodb](https://github.com/syed-ahmed42/batman/assets/76643525/29f8dc52-dc0a-4313-8e4c-b58a255ba8cf)
 
+![Mongodb](https://github.com/syed-ahmed42/Chat-App-Jabbr/assets/76643525/6d6d39b4-2433-4191-91be-66ab612af465)
 
 ## 🔴 Demo:
 
+https://github.com/syed-ahmed42/Chat-App-Jabbr/assets/76643525/c770ab1b-2ca1-4d45-8a00-90baf45e23e8
 
 
-
-https://github.com/syed-ahmed42/Chat-App-Jabbr/assets/76643525/e2cefcb7-72a2-43ff-b05e-e8398aac89be
 
 
 
