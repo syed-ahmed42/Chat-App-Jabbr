@@ -16,6 +16,17 @@ This is a realtime chat app created using MERN stack. All user and chat data is 
 ![Mongodb](https://github.com/syed-ahmed42/batman/assets/76643525/29f8dc52-dc0a-4313-8e4c-b58a255ba8cf)
 
 
+## 🔴 Demo:
+
+
+
+
+https://github.com/syed-ahmed42/Chat-App-Jabbr/assets/76643525/e2cefcb7-72a2-43ff-b05e-e8398aac89be
+
+
+
+
+
 ## Installation Steps
 **Move to an empty directory and then open terminal and type in the following commands:**
 1. git clone repo
