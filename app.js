@@ -54,51 +54,51 @@ const start = async () => {
   try {
     mongoose.connect(process.env.MONGO_URI);
     ioServer.on("connection", (socket) => {
-      console.log("a user connected");
+      //console.log("a user connected");
       socket.on("join room", (chatID) => {
-        console.log("Joined room with ID: " + chatID);
+        //console.log("Joined room with ID: " + chatID);
         socket.join(chatID);
       });
 
       socket.on("leave room", (chatID) => {
-        console.log("Left room with ID: " + chatID);
+        //console.log("Left room with ID: " + chatID);
         socket.leave(chatID);
       });
 
       socket.on("send message", async (chatID, msg, sender) => {
-        console.log("Sent message: " + msg + " to room: " + chatID);
+        //console.log("Sent message: " + msg + " to room: " + chatID);
         if (msg === "") {
-          console.log("ERROR: Message is empty string");
+          //console.log("ERROR: Message is empty string");
           return;
         }
         const msgObject = await addMessageToCurrentChat(msg, chatID, sender);
         msgObject.chatID = chatID;
         msgObject.sender = { username: sender };
-        console.log(
-          "This is the message object being sent: " + JSON.stringify(msgObject)
-        );
+        // console.log(
+        //   "This is the message object being sent: " + JSON.stringify(msgObject)
+        // );
         ioServer.to(chatID).emit("receive message", JSON.stringify(msgObject));
       });
 
       socket.on("delete message", async (curChatID) => {
-        console.log("Received request to delete message on server side");
+        //console.log("Received request to delete message on server side");
         ioServer.to(curChatID).emit("deleted message");
       });
 
       socket.on("delete contact", async (curChatID) => {
-        console.log("Received request to delete chat on server side");
+        //console.log("Received request to delete chat on server side");
         ioServer.to(curChatID).emit("deleted chat");
       });
       socket.on("add contact", async () => {
-        console.log("Received request to add contact on server side");
+        //console.log("Received request to add contact on server side");
         ioServer.emit("added chat");
       });
     });
     server.listen(port, () => {
-      console.log(`Example app listening on port ${port}`);
+      //console.log(`Example app listening on port ${port}`);
     });
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 

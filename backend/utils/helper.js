@@ -11,7 +11,7 @@ const getUserID = async (req, res, next) => {
     .collection("sessions")
     .find({ _id: req.sessionID })
     .toArray();
-  console.log(req.sessionID);
+  //console.log(req.sessionID);
   if (curSession.length === 0) {
     return;
   }
@@ -30,13 +30,13 @@ const addMessageToCurrentChat = async (pMessage, pChatID, pSender) => {
   if (sender === null) {
     return;
   }
-  console.log(
-    "This is sender received from client side in helper function addMessageToCurrentChat: " +
-      pSender
-  );
-  console.log(
-    "This is sender in helper function addMessageToCurrentChat: " + sender._id
-  );
+  // console.log(
+  //   "This is sender received from client side in helper function addMessageToCurrentChat: " +
+  //     pSender
+  // );
+  // console.log(
+  //   "This is sender in helper function addMessageToCurrentChat: " + sender._id
+  // );
 
   const chatID = pChatID;
 

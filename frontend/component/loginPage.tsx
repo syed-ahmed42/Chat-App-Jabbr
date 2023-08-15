@@ -60,9 +60,9 @@ const LoginPage = () => {
       },
     }).catch((error) => {
       if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        //console.log(error.response.data);
+        //console.log(error.response.status);
+        //console.log(error.response.headers);
         toast.error(error.response.data.result, {
           position: "bottom-center",
           autoClose: 2500,

@@ -14,7 +14,7 @@ const chat = require("../models/chat");
 const getChatMessages = async (req, res, next) => {
   const chatID = req.body.chatID;
   if (chatID === "") {
-    console.log("ERROR: ChatID is empty string");
+    //console.log("ERROR: ChatID is empty string");
     return;
   }
   const chat = await chatModel.findById({ _id: chatID }).populate({
@@ -37,7 +37,7 @@ const getContacts = async (req, res, next) => {
   const username = req.body.username;
 
   if (!username) {
-    console.log("ERROR: No username provided");
+    //console.log("ERROR: No username provided");
     return;
   }
   const listOfContacts = await userModel
@@ -67,12 +67,12 @@ const getContacts = async (req, res, next) => {
 };
 
 const deleteMessage = async (req, res, next) => {
-  console.log(
-    "This is the messageId and chatID server-side: " +
-      req.body.id +
-      " " +
-      req.body.chatID
-  );
+  // console.log(
+  //   "This is the messageId and chatID server-side: " +
+  //     req.body.id +
+  //     " " +
+  //     req.body.chatID
+  // );
   const deleteResult = await messageModel.findByIdAndDelete({
     _id: req.body.id,
   });
@@ -96,12 +96,12 @@ const deleteChat = async (req, res, next) => {
   });
   const firstMemberID = chatToBeDeleted.members[0];
   const secondMemberID = chatToBeDeleted.members[1];
-  console.log(
-    "This is inside deleteChat function: " +
-      firstMemberID +
-      " " +
-      secondMemberID
-  );
+  // console.log(
+  //   "This is inside deleteChat function: " +
+  //     firstMemberID +
+  //     " " +
+  //     secondMemberID
+  // );
   //Delete chat from userModel
   await userModel.updateOne(
     { _id: firstMemberID },

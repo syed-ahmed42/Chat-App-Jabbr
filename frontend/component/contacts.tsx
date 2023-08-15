@@ -53,7 +53,7 @@ const Contacts = ({
     setContacts(contactStateData);
   }, [contactStateData]);
 
-  console.log(contacts);
+  //console.log(contacts);
 
   return (
     <div className="h-full contactContainer">

@@ -7,7 +7,7 @@ import { MongoClient } from "mongodb";
 const RedirectFromLogin = async ({ children }: any) => {
   const sessionCookieExists = cookies().has("sid");
   const sessionCookie = cookies().get("sid");
-  console.log(sessionCookie?.value);
+  //console.log(sessionCookie?.value);
   const client = await MongoClient.connect(
     "mongodb+srv://admin:admin@netflix-app322.j0c2t33.mongodb.net/Batman"
   );
@@ -23,7 +23,7 @@ const RedirectFromLogin = async ({ children }: any) => {
       .collection("sessions")
       .find({ _id: sessionId })
       .toArray();
-    console.log("Cur session: " + curSession);
+    //console.log("Cur session: " + curSession);
   }
   if (curSession && curSession.length !== 0) {
     redirect("/chat");

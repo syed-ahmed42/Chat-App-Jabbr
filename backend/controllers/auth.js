@@ -25,7 +25,7 @@ const createAccount = async (req, res, next) => {
     await userModel.create(newAccount);
     return res.status(200).json({ result: "Registration Successful" });
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 
@@ -45,7 +45,7 @@ const login = async (req, res, next) => {
     }
     req.session.userId = user.id;
 
-    console.log(req.session.cookie.originalMaxAge);
+    //console.log(req.session.cookie.originalMaxAge);
 
     if (req.cookies.sid === undefined || req.cookies.sid !== req.sessionID) {
       res.cookie("sid", req.sessionID, {
@@ -58,7 +58,7 @@ const login = async (req, res, next) => {
 
     return res.status(200).json({ result: "Successfully logged in" });
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 
@@ -71,9 +71,9 @@ const checkSessionValidity = async (req, res, next) => {
 };
 
 const logout = async (req, res, next) => {
-  console.log(req.sessionID);
+  //console.log(req.sessionID);
   req.session.destroy(async (err) => {
-    console.log("Error has occured on logout");
+    //console.log("Error has occured on logout");
   });
 
   return res.status(200).json({ outcome: "success" });

@@ -4,12 +4,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { MongoClient } from "mongodb";
 import { ObjectId } from "mongodb";
-import "../styles/redirectFromChat.css"
+import "../styles/redirectFromChat.css";
 
 const RedirectFromChat = async ({ children }: any) => {
   const sessionCookieExists = cookies().has("sid");
   const sessionCookie = cookies().get("sid");
-  console.log(sessionCookie?.value);
+  //console.log(sessionCookie?.value);
   const client = await MongoClient.connect(
     "mongodb+srv://admin:admin@netflix-app322.j0c2t33.mongodb.net/Batman"
   );
@@ -25,7 +25,7 @@ const RedirectFromChat = async ({ children }: any) => {
       .collection("sessions")
       .find({ _id: sessionId })
       .toArray();
-    console.log(curSession);
+    //console.log(curSession);
   }
 
   if (curSession && curSession?.length !== 0) {

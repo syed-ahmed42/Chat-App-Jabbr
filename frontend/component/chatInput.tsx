@@ -7,7 +7,7 @@ import $ from "jquery";
 
 const ChatInput = ({ curChatID, pepsiClick }: any) => {
   const [userInput, setUserInput] = useState("");
-  console.log("Inside chat input: " + curChatID);
+  //console.log("Inside chat input: " + curChatID);
   const MAXCHARS = 200;
   /*document.querySelectorAll("textArea.textArea").forEach((element) => {
     (element as HTMLTextAreaElement).style.height = `${element.scrollHeight}px`;
@@ -29,7 +29,7 @@ const ChatInput = ({ curChatID, pepsiClick }: any) => {
   useAutosizeTextArea(dummyAreaRef.current, textAreaRef.current, value);
 
   useEffect(() => {
-    console.log("This is value: " + value);
+    //console.log("This is value: " + value);
     /*if ($(".textArea").text().length > 3) {
       console.log("This text is too big: " + $(".textArea").text());
       $(".textArea").text(value.slice(0, 4));
@@ -51,7 +51,7 @@ const ChatInput = ({ curChatID, pepsiClick }: any) => {
   $(".textArea").on("keydown propertychange", function (event) {
     $("span").text("Total chars:" + $(this).text().length);
     let boolean = !(event.ctrlKey && event.keyCode == 65);
-    console.log("This is boolean inside chatInput: " + boolean);
+    //console.log("This is boolean inside chatInput: " + boolean);
     if ($(this).text().length === MAXCHARS && event.keyCode != 8) {
       event.preventDefault();
     }
@@ -104,7 +104,7 @@ const ChatInput = ({ curChatID, pepsiClick }: any) => {
               const bait =
                 stuff.charCodeAt(0).toString(16) === "a" &&
                 stuff.charCodeAt(1).toString(16) === "a";
-              console.log("This is stuff: " + value);
+              //console.log("This is stuff: " + value);
               if (!bait) {
                 setValue(stuff);
               }
@@ -138,7 +138,7 @@ const ChatInput = ({ curChatID, pepsiClick }: any) => {
                 const bait =
                   stuff.charCodeAt(0).toString(16) === "a" &&
                   stuff.charCodeAt(1).toString(16) === "a";
-                console.log("This is stuff: " + bait);
+                //console.log("This is stuff: " + bait);
                 if (!bait) {
                   setValue(stuff);
                 }

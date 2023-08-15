@@ -29,7 +29,7 @@ const ChatViewport = ({
   };
 
   useEffect(() => {
-    console.log("UseEffect triggered in chatViewport");
+    //console.log("UseEffect triggered in chatViewport");
     setShowContent(false);
     setTimeout(() => {
       setShowContent(true);
@@ -45,15 +45,15 @@ const ChatViewport = ({
       }, 50);
     }
 
-    console.log("These are the viewport messages: " + viewportMessages);
-    console.log(
-      "This is the name of the sender (found within chatViewport): " +
-        viewportMessages
-    );
+    //console.log("These are the viewport messages: " + viewportMessages);
+    //console.log(
+    //   "This is the name of the sender (found within chatViewport): " +
+    //     viewportMessages
+    // );
   }, [messages, messageObject]);
-  console.log(
-    "This is inside chat viewport: " + JSON.stringify(viewportMessages)
-  );
+  // console.log(
+  //   "This is inside chat viewport: " + JSON.stringify(viewportMessages)
+  // );
   //Check for unexpected JSON end of file input
   //messages = JSON.stringify(viewportMessages);
   //const parsedMessages = viewportMessages;

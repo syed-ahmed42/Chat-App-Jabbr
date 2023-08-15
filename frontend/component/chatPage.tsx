@@ -60,32 +60,32 @@ const ChatPage = () => {
 
   useEffect(() => {
     socket.on("receive message", (msg) => {
-      console.log(
-        "Message received. The current client is currently viewing chat with chatID: " +
-          curChatID
-      );
+      // console.log(
+      //   "Message received. The current client is currently viewing chat with chatID: " +
+      //     curChatID
+      // );
       //MsgObject has format
       //{content: ..., chatID: ..., sender: ...}
       const msgObject = JSON.parse(msg);
-      console.log("This is msgObject chatID: " + msgObject.chatID);
-      console.log("This is the msg that is being received: " + msg);
+      //console.log("This is msgObject chatID: " + msgObject.chatID);
+      //console.log("This is the msg that is being received: " + msg);
       if (msgObject.chatID === curChatID) {
         setMessages((prevArr) => [...prevArr, msgObject.content]);
         messageObjectArr.push(msgObject);
         fastMessagesArr.push(msgObject.content);
       }
       getContacts();
-      console.log(
-        "This is the updated message state after receipt of message: " +
-          messages
-      );
+      // console.log(
+      //   "This is the updated message state after receipt of message: " +
+      //     messages
+      // );
       /*if (curChatID !== "") {
         console.log(msg + " Sent to chat id: " + curChatID);
       }*/
     });
 
     socket.on("deleted message", async () => {
-      console.log("Received socket request to delete message");
+      //console.log("Received socket request to delete message");
       if (curChatID !== "") {
         const updatedMessages = await getMessagesByChatID(curChatID);
         messageObjectArr = updatedMessages.data.messages;
@@ -94,7 +94,7 @@ const ChatPage = () => {
     });
 
     socket.on("deleted chat", async () => {
-      console.log("Received socket request to delete chat");
+      //console.log("Received socket request to delete chat");
       await getContacts();
       messageObjectArr = [];
       setTestMessages([]);
@@ -106,7 +106,7 @@ const ChatPage = () => {
     });
 
     socket.on("added chat", async () => {
-      console.log("Received socket request to add chat");
+      //console.log("Received socket request to add chat");
       await getContacts();
       if (chatData !== undefined) {
         const preloadedContactData = await getContactsData(chatData.username);
@@ -116,16 +116,16 @@ const ChatPage = () => {
   }, [socket]);
 
   useEffect(() => {
-    console.log("CLIENT SIDE: Joining room with ID: " + curChatID);
+    //console.log("CLIENT SIDE: Joining room with ID: " + curChatID);
     socket.emit("join room", curChatStateID);
   }, [curChatStateID]);
   if (chatData !== undefined && chatData !== null) {
-    console.log("This is contact data: " + chatData.username);
+    //console.log("This is contact data: " + chatData.username);
   }
 
   useEffect(() => {
     socket.on("connection", () => {
-      console.log("Connected on the client side");
+      //console.log("Connected on the client side");
     });
 
     /*const setBeginningContactData = async () => {
@@ -149,13 +149,13 @@ const ChatPage = () => {
       },
     }).catch((error) => {
       if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        //console.log(error.response.data);
+        //console.log(error.response.status);
+        //console.log(error.response.headers);
       }
     });
     const tempArr = contactData.data.outcome;
-    console.log("This is tempArr: " + JSON.stringify(tempArr));
+    //console.log("This is tempArr: " + JSON.stringify(tempArr));
     return tempArr;
   };
 
@@ -175,9 +175,9 @@ const ChatPage = () => {
       },
     }).catch((error) => {
       if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        //console.log(error.response.data);
+        //console.log(error.response.status);
+        //console.log(error.response.headers);
       }
     });
     socket.emit("delete contact", curChatID);
@@ -191,7 +191,7 @@ const ChatPage = () => {
       progress: undefined,
       theme: "dark",
     });
-    console.log("Chat has been deleted in database");
+    //console.log("Chat has been deleted in database");
   };
   //Using useEffect so that io only gets called once
   const deleteMessageOnDatabase = async (
@@ -200,8 +200,8 @@ const ChatPage = () => {
     msgObject: any
   ) => {
     axios.defaults.withCredentials = true;
-    console.log("This is message id: " + id);
-    console.log("This is message object: " + JSON.stringify(msgObject));
+    //console.log("This is message id: " + id);
+    //console.log("This is message object: " + JSON.stringify(msgObject));
     await axios({
       method: "post",
       url: "http://localhost:3000/api/v1/chat/deleteMessage",
@@ -211,16 +211,16 @@ const ChatPage = () => {
       },
     }).catch((error) => {
       if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        //console.log(error.response.data);
+        //console.log(error.response.status);
+        //console.log(error.response.headers);
       }
     });
     socket.emit("delete message", curChatID);
-    console.log("Message has been deleted in database");
+    //console.log("Message has been deleted in database");
   };
   const fetchMessages = async (username: any) => {
-    console.log("Fetching messages..." + JSON.stringify(username));
+    //console.log("Fetching messages..." + JSON.stringify(username));
     /*console.log(
       "Members data: " + JSON.stringify(chatData?.listOfChats[0].members)
     );
@@ -242,9 +242,9 @@ const ChatPage = () => {
       ) {
         const listOfMsgArr = chatData?.listOfChats[i].listOfMessages;
         curChatID = chatData?.listOfChats[i]._id;
-        console.log("Changing cur chat id: " + curChatID);
+        //console.log("Changing cur chat id: " + curChatID);
         setCurChatStateID(curChatID);
-        console.log("ChatID: " + curChatID);
+        //console.log("ChatID: " + curChatID);
 
         const msgContent = listOfMsgArr.map((msg: any) => msg.content);
         const msgObject = listOfMsgArr.map((msg: any) => ({
@@ -258,11 +258,11 @@ const ChatPage = () => {
         setMessages(msgContent);
         messageObjectArr = msgObject;
         fastMessagesArr = msgContent;
-        console.log("This is fastMessagesArr: " + fastMessagesArr);
+        //console.log("This is fastMessagesArr: " + fastMessagesArr);
         break;
       }
     }
-    console.log(messages);
+    //console.log(messages);
   };
 
   const getMessages = async (chatID: any) => {
@@ -271,10 +271,10 @@ const ChatPage = () => {
     setTestMessages(messageObjectArr);
     curChatID = chatID;
     setCurChatStateID(chatID);
-    console.log(
-      "This is inside getMessages function, this is the messageObjectArr: " +
-        JSON.stringify(messageObjectArr)
-    );
+    // //console.log(
+    //   "This is inside getMessages function, this is the messageObjectArr: " +
+    //     JSON.stringify(messageObjectArr)
+    // );
   };
 
   const getMessagesByChatID = async (chatID: any) => {
@@ -286,9 +286,9 @@ const ChatPage = () => {
       },
     }).catch((error) => {
       if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        //console.log(error.response.data);
+        //console.log(error.response.status);
+        //console.log(error.response.headers);
       }
     });
     return myMessages;
@@ -304,9 +304,9 @@ const ChatPage = () => {
       },
     }).catch((error) => {
       if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        //console.log(error.response.data);
+        //console.log(error.response.status);
+        //console.log(error.response.headers);
         toast.error(error.response.data.outcome, {
           position: "bottom-center",
           autoClose: 2500,
@@ -319,16 +319,16 @@ const ChatPage = () => {
         });
       }
     });
-    console.log(
-      "This is post request outcome inside handleAddContact: " +
-        chatCreationResponse
-    );
+    // //console.log(
+    //   "This is post request outcome inside handleAddContact: " +
+    //     chatCreationResponse
+    // );
     if (chatCreationResponse !== undefined) {
       socket.emit("add contact");
-      console.log(
-        "This is inside chatCreationResponse: " +
-          chatCreationResponse.data.outcome
-      );
+      // console.log(
+      //   "This is inside chatCreationResponse: " +
+      //     chatCreationResponse.data.outcome
+      // );
       toast.success(chatCreationResponse.data.outcome, {
         position: "bottom-center",
         autoClose: 2500,
@@ -350,8 +350,8 @@ const ChatPage = () => {
       })
       .then((res) => {})
       .catch((err) => {
-        console.log(err);
-        console.log(err.response);
+        //console.log(err);
+        //console.log(err.response);
       });
     setMessages([""]);
     messageObjectArr = [];
@@ -363,7 +363,7 @@ const ChatPage = () => {
 
   const sendMessage = (chatID: any, msg: any) => {
     if (chatID === "") {
-      console.log("ERROR: ChatID is empty string");
+      //console.log("ERROR: ChatID is empty string");
     }
 
     if (msg.length > 200) {
