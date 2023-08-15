@@ -1,5 +1,5 @@
-# Jabbr
-This is a realtime chat app created using MERN stack. All user and chat data is stored in MongoDB. Frontend is made using React/NextJS. Backend is made using Express/NodeJS.
+# Chat-App: Jabbr
+This is a realtime chat app created using MERN stack. All user and chat data is stored in MongoDB. Frontend is made using React/NextJS. Backend is made using Express/NodeJS. Real time communication implemented using Socket.IO
 
 
 ## Features
